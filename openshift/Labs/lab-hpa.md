@@ -124,6 +124,6 @@ Salvar y recargar.
 
  12.5. A los 5 minutos de haberse reducido la carga por debajo del límite indicado en el `hpa`, el número de pods decrecerá y volverá a ser lo que esté definido en el deployment.
 
-13. Limpiar el entorno
+13. Eliminar el hpa, por linea de comando o por la consola de OCP:
 
-      oc delete project <NOMBRE PROYECTO>
+        oc delete hpa <NOMBRE>
