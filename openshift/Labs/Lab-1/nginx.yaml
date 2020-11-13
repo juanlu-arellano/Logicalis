@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: GUID-formacion
+  labels:
+    app: nginx
+spec:
+  containers:
+    - image: nginx
+      name: nginx
+      ports:
+      - containerPort: 80
