@@ -24,7 +24,7 @@
 
 4. A continuación haremos un push para sincronizar el repositorio remoto con los datos del repositorio local:
 
-       $ git push origin master
+       $ git push -u origin master
        Username for 'https://github.com': lissettegar
        Password for 'https://lissettegar@github.com':
        Counting objects: 11, done.
@@ -134,4 +134,3 @@
        remote: Resolving deltas: 100% (2/2), completed with 1 local object.
        To https://github.com/lissettegar/prueba.git
           fd98b47..5670211  master -> master
-                                                                    

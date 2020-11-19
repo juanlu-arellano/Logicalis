@@ -18,8 +18,8 @@
        nothing added to commit but untracked files present (use "git add" to track)
 
        $ git add .
-       $ git commit -m "verion 1.0"
-       [master eec021c] verion 1.0
+       $ git commit -m "version 1.0"
+       [master eec021c] version 1.0
         1 file changed, 1 insertion(+)
         create mode 100644 version
 
@@ -86,7 +86,7 @@
        Author: Lissette García <lissette.garcia@es.logicalis.com>
        Date:   Wed Nov 18 10:36:34 2020 +0100
 
-           verion 1.0
+           version 1.0
 
        commit a4522872d7c80eef8e17b3d12baa81ba53b81008
        Author: Lissette García <lissette.garcia@es.logicalis.com>
@@ -122,7 +122,7 @@
        Author: Lissette García <lissette.garcia@es.logicalis.com>
        Date:   Wed Nov 18 10:36:34 2020 +0100
 
-           verion 1.0
+           version 1.0
 
        diff --git a/version b/version
        new file mode 100644
@@ -182,7 +182,7 @@
        Author: Lissette García <lissette.garcia@es.logicalis.com>
        Date:   Wed Nov 18 10:36:34 2020 +0100
 
-           verion 1.0
+           version 1.0
 
        diff --git a/version b/version
        new file mode 100644
@@ -209,7 +209,7 @@
        Author: Lissette García <lissette.garcia@es.logicalis.com>
        Date:   Wed Nov 18 10:36:34 2020 +0100
 
-           verion 1.0
+           version 1.0
 
         version | 1 +
         1 file changed, 1 insertion(+)
@@ -239,7 +239,7 @@
        Author: Lissette García <lissette.garcia@es.logicalis.com>
        Date:   Wed Nov 18 10:36:34 2020 +0100
 
-           verion 1.0
+           version 1.0
 
         1 file changed, 1 insertion(+)
 
@@ -268,7 +268,7 @@
         Author: Lissette García <lissette.garcia@es.logicalis.com>
         Date:   Wed Nov 18 10:36:34 2020 +0100
 
-            verion 1.0
+            version 1.0
 
         version
 
@@ -297,7 +297,7 @@
        Author: Lissette García <lissette.garcia@es.logicalis.com>
        Date:   Wed Nov 18 10:36:34 2020 +0100
 
-           verion 1.0
+           version 1.0
 
        A       version
 
@@ -323,7 +323,7 @@
         Author: Lissette García <lissette.garcia@es.logicalis.com>
         Date:   Wed Nov 18 10:36:34 2020 +0100
 
-            verion 1.0
+            version 1.0
 
         commit a452287
         Author: Lissette García <lissette.garcia@es.logicalis.com>
@@ -344,7 +344,7 @@
         Author: Lissette García <lissette.garcia@es.logicalis.com>
         Date:   25 minutes ago
 
-            verion 1.0
+            version 1.0
 
         commit a4522872d7c80eef8e17b3d12baa81ba53b81008
         Author: Lissette García <lissette.garcia@es.logicalis.com>
@@ -365,7 +365,7 @@
         Author: Lissette García <lissette.garcia@es.logicalis.com>
         Date:   25 minutes ago
 
-            verion 1.0
+            version 1.0
 
         commit a452287
         Author: Lissette García <lissette.garcia@es.logicalis.com>
@@ -386,7 +386,7 @@
         | Author: Lissette García <lissette.garcia@es.logicalis.com>
         | Date:   Wed Nov 18 10:36:34 2020 +0100
         |
-        |     verion 1.0
+        |     version 1.0
         |
         * commit a4522872d7c80eef8e17b3d12baa81ba53b81008
           Author: Lissette García <lissette.garcia@es.logicalis.com>
@@ -411,7 +411,7 @@
         Commit:     Lissette García <lissette.garcia@es.logicalis.com>
         CommitDate: Wed Nov 18 10:36:34 2020 +0100
 
-            verion 1.0
+            version 1.0
 
         commit a4522872d7c80eef8e17b3d12baa81ba53b81008
         Author:     Lissette García <lissette.garcia@es.logicalis.com>
@@ -423,7 +423,7 @@
 
         $ git log --pretty=oneline
         4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master) version 2.0
-        eec021cc70adec40e44c2cdead96d3efa2100606 verion 1.0
+        eec021cc70adec40e44c2cdead96d3efa2100606 version 1.0
         a4522872d7c80eef8e17b3d12baa81ba53b81008 commit hello.txt and cambios.txt
 
         $ git log --pretty=short
@@ -435,7 +435,7 @@
         commit eec021cc70adec40e44c2cdead96d3efa2100606
         Author: Lissette García <lissette.garcia@es.logicalis.com>
 
-            verion 1.0
+            version 1.0
 
         commit a4522872d7c80eef8e17b3d12baa81ba53b81008
         Author: Lissette García <lissette.garcia@es.logicalis.com>
@@ -446,12 +446,12 @@
 
         $ git log --pretty=format:"%h %s" --graph
         * 4f73fa5 version 2.0
-        * eec021c verion 1.0
+        * eec021c version 1.0
         * a452287 commit hello.txt and cambios.txt
 
         $ git log --pretty=format:"%h - %an, %ar : %s"
         4f73fa5 - Lissette García, 29 minutes ago : version 2.0
-        eec021c - Lissette García, 32 minutes ago : verion 1.0
+        eec021c - Lissette García, 32 minutes ago : version 1.0
         a452287 - Lissette García, 2 hours ago : commit hello.txt and cambios.txt
 
         $ git log -Sversion
@@ -459,4 +459,4 @@
         Author: Lissette García <lissette.garcia@es.logicalis.com>
         Date:   Wed Nov 18 10:36:34 2020 +0100
 
-            verion 1.0
+            version 1.0
