@@ -2,7 +2,9 @@
 
 ### Historial de confirmaciones
 
-1. En el mismo repositorio de los labs anteriores, añadir un fichero al repositorio:
+* Prerequisito: Haber terminado los labs 1 y 2. No es indispensable pero si se han terminado los resultados de los comandos serán los mismos que en los ejemplos.
+
+1. En el mismo repositorio de los labs 1 y 2, añadir un fichero al repositorio:
 
        $ echo 'version: 1.0' > version
 

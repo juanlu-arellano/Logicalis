@@ -84,7 +84,7 @@
 
 8. En este punto aun no hay nada agregado o modificado en la carpeta `.git`:
 
-       tree .git
+       $ tree .git
        .git
        ├── branches
        ├── config
@@ -227,9 +227,9 @@ Primero hay que verificar el tipo de archivo pasando como parámetro una combina
         [master (root-commit) 79d3616] commit hello.txt
          1 file changed, 2 insertions(+)
          create mode 100644 hello.txt
-         $ git status
-         On branch master
-         nothing to commit, working tree clean
+        $ git status
+        On branch master
+        nothing to commit, working tree clean
 
 19. Podemos ver como se crean varios ficheros en la carpeta `.git`:
 
@@ -273,15 +273,16 @@ Primero hay que verificar el tipo de archivo pasando como parámetro una combina
    * Se han creado nuevas carpetas en `objects`.
    * La carpeta master fue creada en`refs/heads`.
 
-20. Ejecute el siguiente comando para examinar el fichero del `commit`. Hay dos nuevos archivos creados, así que uno de ellos es el `commit`:
+20. Ahora vamos a examinar el fichero del `commit`. Hay dos nuevos archivos creados, así que uno de ellos es del `commit`. Para identificar cual es hay que ejecutar `git cat-file -t <id>` (recordad que el id se forma juntando el nombre de la carpeta y el nombre del fichero), por ejemplo:
 
+        $ git cat-file -t f54869598dea474ea9fc8a41bd7cdd016d3e7de9
+        commit
         $ git cat-file commit f54869598dea474ea9fc8a41bd7cdd016d3e7de9
         tree 35d4b75f539702e8c15fc1c985e61cca603a2a3b
         author Lissette García <lissette.garcia@es.logicalis.com> 1605687811 +0100
         committer Lissette García <lissette.garcia@es.logicalis.com> 1605687811 +0100
 
         commit hello.txt
-
 
 21. Examinemos el resto de ficheros creados:
 

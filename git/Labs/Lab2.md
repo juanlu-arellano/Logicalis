@@ -23,15 +23,17 @@
 3. Este fichero que acabamos de crear no fue incluido en el commit anterior por error, así que vamos a incluirlo ahora usando el comando git commit --amend:
 
        $ git add cambios.txt
-       lgarciap@lgarciap-ThinkPad-T480:~/Documents/REPOS/prueba$ git status
+       $ git status
        On branch master
        Changes to be committed:
          (use "git reset HEAD <file>..." to unstage)
 
        	new file:   cambios.txt
 
-4. Podemos comprobar que se ha creado una entrada para el nuevo fichero:
+4. Podemos comprobar que se ha creado una entrada en el directorio objects para el nuevo fichero que acabamos de añadir:
 
+        $ tree
+        ...
         ├── index
         ├── info
         │   └── exclude
@@ -58,9 +60,10 @@
             │   └── master
             └── tags
 
-5. Hacemos el commit:
+5. Ahora ejecutaremos el commit y como no hemos puesto la opcion `-m` para indicar un mensaje, se abrirá el editor configurado para git. Añadir un mensaje para el commit y salir del editor guardando los cambios `:wq!`:
 
        $ git commit --amend
+
        commit hello.txt and cambios.txt
 
        # Please enter the commit message for your changes. Lines starting
@@ -76,8 +79,8 @@
        #       new file:   cambios.txt
        #       new file:   hello.txt
        #
+       :wq!
 
-       $ git commit --amend
        [master a452287] commit hello.txt and cambios.txt
         Date: Wed Nov 18 09:23:31 2020 +0100
         2 files changed, 3 insertions(+)
@@ -90,6 +93,8 @@
 
 6. Ahora podemos ver que se ha registrado el nuevo commit:
 
+       $ tree
+       ...
        ├── index
        ├── info
        │   └── exclude
@@ -120,27 +125,27 @@
            │   └── master
            └── tags
 
-7. Si lo examinamos:
+7. Si lo examinamos (hay que buscar cual es el fichero del commit con el comando `git cat-file -t <id>`):
 
        $ git cat-file -t a4522872d7c80eef8e17b3d12baa81ba53b81008
        commit
-       lgarciap@lgarciap-ThinkPad-T480:~/Documents/REPOS/prueba$ git cat-file commit a4522872d7c80eef8e17b3d12baa81ba53b81008
+       $ git cat-file commit a4522872d7c80eef8e17b3d12baa81ba53b81008
        tree 075f71514a6b3bce04c7ab07930b3d017bbe67e6
        author Lissette García <lissette.garcia@es.logicalis.com> 1605687811 +0100
        committer Lissette García <lissette.garcia@es.logicalis.com> 1605688259 +0100
 
        commit hello.txt and cambios.txt
 
-8. Tambien podemos confirmar que el actual HEAD es el nuevo commit:
+8. Tambien podemos confirmar que el head apunta al nuevo commit:
 
        $ cat .git/refs/heads/master
        a4522872d7c80eef8e17b3d12baa81ba53b81008
 
-9. Ahora modificamos el fichero cambios.txt:
+9. Modificamos el fichero cambios.txt:
 
        $ echo 'segunda linea' >> cambios.txt
 
-10. En este punto git detecta el fichero como modificado:
+10. Git detecta que un fichero que está bajo su controlha sido modificado:
 
         $ git status
         On branch master
@@ -162,7 +167,7 @@
 
         	modified:   cambios.txt
 
-12. En este punto nos damos cuenta de que no queremos que este cambio se incluya aún en un commit, así que vamos a sacar al fichero del area de preparación:
+12. En este punto nos damos cuenta de que no queremos que este cambio se incluya en el siguiente commit, así que vamos a sacar al fichero del area de preparación:
 
         $ git reset HEAD
         Unstaged changes after reset:
@@ -181,11 +186,11 @@
         segunda linea
 
 
-13. Si en este caso quisieramos recuperar la versión del fichero cambios.txt que tenemos en el commit podriamos hacerlo con un git checkout:
+13. En caso de que quisieramos recuperar en nuestro directorio de trabajo, la versión del fichero `cambios.txt` que hemos registrado en el commit anterior podriamos hacerlo con un `git checkout`:
 
          $ git checkout -- cambios.txt
          $ git status
          On branch master
          nothing to commit, working tree clean
-         $ cat cambios.txt 
+         $ cat cambios.txt
          primera linea

@@ -53,7 +53,7 @@
 
        nothing added to commit but untracked files present (use "git add" to track)
 
-5. Podriamos no querer rastrear el fichero .gitignore, pero todos aquellos con los que compartimos nuestro repositorio probablemente desearán ignorar las mismas cosas que nosotros. Vamos a agregar y hacer “commit” de ambos ficheros:
+5. Podriamos no querer rastrear el fichero .gitignore, pero todos aquellos con los que compartimos nuestro repositorio probablemente desearán ignorar las mismas cosas que nosotros. Vamos a añadir y hacer “commit” de ambos ficheros:
 
        $ git add .
        $ git status
@@ -73,7 +73,7 @@
        # On branch master
        nothing to commit, working directory clean
 
-6. Como ventaja, usar .gitignore nos ayuda a evitar agregar accidentalmente al repositorio los archivos que no queremos rastrear:
+6. Como ventaja, usar .gitignore nos ayuda a evitar añadir accidentalmente al repositorio los archivos que no queremos rastrear:
 
        $ git add a.dat
 
@@ -84,7 +84,7 @@
 7. Si realmente queremos anular la configuración de ignorar, podemos usar git add -f para obligar a Git a añadir algo:
 
        $ git add -f a.dat
-       lgarciap@lgarciap-ThinkPad-T480:~/Documents/REPOS/repo-ignore$ git status
+       $ git status
        On branch master
        Changes to be committed:
          (use "git reset HEAD <file>..." to unstage)
