@@ -286,11 +286,11 @@ Primero hay que verificar el tipo de archivo pasando como parámetro una combina
 
 21. Examinemos el resto de ficheros creados:
 
-   Contiene el commitid correspondiente al HEAD:
+   Contiene el commit id correspondiente al HEAD:
         $ cat .git/refs/heads/master
         f54869598dea474ea9fc8a41bd7cdd016d3e7de9
 
-   Contienen la misma información "el commitid correspondiente al HEAD":
+   Contienen la misma información, "el commitid correspondiente al HEAD":
         $ cat .git/logs/HEAD
         0000000000000000000000000000000000000000 f54869598dea474ea9fc8a41bd7cdd016d3e7de9 Lissette García <lissette.garcia@es.logicalis.com> 1605687811 +0100	commit (initial): commit hello.txt
 

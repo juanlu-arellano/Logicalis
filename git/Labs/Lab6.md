@@ -1,5 +1,7 @@
 ### Instrucciones Laboratorio 6
 
+* Prerequisito: Haber terminado los labs anteriores.
+
 ### Etiquetado
 
 1. Mostrar el historial de confirmaciones:
@@ -183,5 +185,5 @@
         eec021cc70adec40e44c2cdead96d3efa2100606 (tag: v1.0) verion 1.0
         a4522872d7c80eef8e17b3d12baa81ba53b81008 commit hello.txt and cambios.txt
 
-        $ cat version 
+        $ cat version
         version: 3.0

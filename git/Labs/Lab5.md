@@ -1,5 +1,7 @@
 ### Instrucciones Laboratorio 5
 
+* Prerequisito: Haber terminado los labs anteriores. No es indispensable pero si se han terminado los resultados de los comandos serán los mismos que en los ejemplos.
+
 ### Repositorios remotos
 
 1. Crear un repositorio en github (se necesita tener una cuenta en github):
