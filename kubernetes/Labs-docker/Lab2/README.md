@@ -1,69 +1,77 @@
-### ¿Qué estamos construyendo?
+### Instrucciones Laboratorio 2 docker - Manejo de Imagenes
 
-Estamos creando una API de `nodejs` que da la hora actual. Para ellos usaremos `express lib`. Veamos cómo se ve desde la perspectiva de las imágenes de docker.
+En este laboratorio vamos a crear una imagen de las tres formas que hemos comentado, de forma interactiva, a partir de un docker file o desde un fichero comprimido creado a partir de una imagen existente. 
+La aplicación es una API de `nodejs` que da la hora actual. Para ellos usaremos `express lib`. Veamos cómo se ve desde la perspectiva de las imágenes de docker.
 
 ![alt Imagenes][imagen]
 
 [imagen]: imagenes/Imagenes.png
 
 
-Veamos como contruimos esta imagen de las tres formas:
+#### 1. Creando la imagen de forma interactiva (modificando el contenedor)
 
-#### 1. De forma interactiva
-
-Como sabemos, cada imagen parte de una imagen base, por lo tanto tenemos que hacer el pull de la imagen base:
+Cada imagen parte de una imagen base, así que lo primero que haremos será hacer el pull de la imagen que queremos que sea nuestra imagen base:
 
     $ docker pull node:latest
 
-Ahora ya tenemos la imagen base. Para añadirle capas arrancaremos un contenedor usando dicha imagen y entraremos en el:
+Ahora ya nos hemos traido la imagen base. Para añadirle capas de forma interactiva, arrancaremos un contenedor usando dicha imagen, entraremos en el y ejecutaremos todo lo que necesitamos para crear nuestra imagen personalizada.
+
+Arrancamos el contenedor:
 
     $ docker container run -dit --name node-express-server node
+
+Entramos en el contenedor:
+
     $ docker exec -it node-express-server /bin/bash
 
-A continuación crearemos directorios y ficheros y con un `docker commit` crearemos una nueva imagen añadiendo capas:
+Una vez dentro del contenedor crearemos directorios y ficheros y finalmente con un `docker commit` crearemos una nueva imagen ya personalizada.
 
-    // make a directory
+Dentro del contenedor creamos un directorio:
+
     $ mkdir /usr/src/app
 
-    // cd to that directory
+Nos movemos al directorio:
+
     $ cd /usr/src/app
 
-    //create package.json (confirm all default answer)
+Creamos el package.json (confirmar todas las respuestas por defecto):
+
     $ npm init
 
-    //install express
+Instalar el express:
+
     $ npm install --save express
 
-    //install vim to edit the file on command line
+Instalamos el vim para usarlo como editor:
+
     $ apt-get update
     $ apt-get install -y vim
 
-    // create a file here and put all the content here
-    // i for insert, esc for command mode, : and wq! after editing
+Creamos un fichero index.js:
 
-    $ vi index.js
-
+    $ cat > index.js <<EOF
     const express = require('express');
     const app = express();
     const port = 3080;
-
+    
     app.get('/time', (req,res) => {
         res.send(new Date());
     });
-
+    
     app.get('/', (req,res) => {
         res.send('App Works !!!!');
     });
-
+    
     app.listen(port, ()=> {
-        console.log(`server listening on the port:::${port}`);
+        console.log(\`server listening on the port:::\${port}\`);
     });
+    EOF
 
-    // list all the files
-    $ ls
+Comprobar si el contenido del fichero index.js es correcto:
 
+    $ cat index.js
 
-Ahora probemos el contenedor y hagamos el `commit` de los cambios:
+Ahora probamos el contenedor:
 
     // run the index.js under /usr/src/app
     $ node index.js
@@ -72,30 +80,32 @@ Ahora probemos el contenedor y hagamos el `commit` de los cambios:
     // ctrl c and exit
     exit
 
-    // commit the container into an image
+En este punto la imagen esta personalizada tal y como la queremos, ya podemos crear una nueva imagen llamada `my-node-server` a partir de las modificaciones que hemos hecho al contenedor:
+
     $ docker container commit node-express-server my-node-server
 
-    //test it
+Comprobamos que la imagen se crea correctamente:
+
     $ docker images
     REPOSITORY                                              TAG                  IMAGE ID            CREATED             SIZE
     my-node-server                                          latest               8e21de81395b        20 seconds ago      994MB
 
-Ya tenemos una nueva imagen creada a partir de otra existe llamada `my-node-server`. Ejecutemos un contenedor con dicha imagen y probemosla:
+A continuación arrancaremos un contenedor de nombre `current-time` con la imagen que hemos creado:
 
     $ docker container run -dit --name current-time -p 3080:3080 my-node-server node /usr/src/app/index.js
 
 Para probar la imagen abrir en un navegador `localhosts:3080/time`
 
 
-#### 2. Usando un Dockerfile
+#### 2. Creando la imagen usando un Dockerfile
 
 Veamos ahora cómo podemos construir la misma imagen a partir de un `dockerfile`. Dockerfile se usa para automatizar el proceso de creación de imágenes. Una vez que tengamos un Dockerfile, se pueden crear tantas imágenes como sea desee.
 
-En el repositorio de la formación esta el dockerfile que usaremos:
+En el repositorio de la formación esta el `Dockerfile` que usaremos para crear la imagen en el directorio `node-express-server`. En este directorio tambien estan los ficheros `package.json` e `index.js` que se necesitan para la imagen. Nos movemos al directorio `node-express-server`:
 
-https://github.com/lissettegar/formacion-mayoral/tree/master/kubernetes/Labs-docker/Lab2/node-express-server
+    $cd <repo>/kubernetes/Labs-docker/Lab2/node-express-server
 
-Este es el contenido, los pasos que se describen son los mismos que hicimos manualmente en el paso anterior:
+Este es el contenido del `Dockerfile`, los pasos que se describen son los mismos que hicimos manualmente en el punto 1:
 
     # base image
     FROM node:latest
@@ -116,12 +126,22 @@ Este es el contenido, los pasos que se describen son los mismos que hicimos manu
 
     CMD ["node","index.js"]
 
-Para crear la imagen a partir del Dockerfile:
+Para crear la imagen a partir del Dockerfile, ejecutaremos un `docker build`:
 
+    $ docker build -t my-node-server:1.0 .
 
-En este punto tendremos en local la nueva imagen y podriamos arrancar un contenedor como hicimos en el caso anterior:
+En este punto tendremos en local la nueva imagen:
 
-    $ docker container run -dit --name new-node-derver my-node-server:1.0
+    $ docker images
+    REPOSITORY                    TAG                 IMAGE ID            CREATED             SIZE
+    my-node-server                1.0                 69fb5d3d952c        2 minutes ago       940MB
+
+ y podriamos arrancar un contenedor a partir de dicha imagen:
+
+    $ docker container run -dit --name new-node-server my-node-server:1.0
+
+Si entramos en el contenedor que acabamos de crear veremos que el directorio `/usr/src/app` contiene los ficheros que se indicaba que se copiaran en el Dockerfile:
+
     $ docker exec -it new-node-server /bin/bash
     root@4142e9490d90:/usr/src/app# ls -la
     total 36
@@ -133,16 +153,21 @@ En este punto tendremos en local la nueva imagen y podriamos arrancar un contene
     -rw-r--r--  1 root root   555 Jun 17 13:28 package.json
 
 
-#### 3. Importando un fichero comprimido
+#### 3. Creando la imagen importando un fichero comprimido
 
-Con este método, si tenemos una imagen, podemos guardarla en un fichero .tar con el comando `docker save` y luego podemos importar la misma imagen del tar donde lo necesitemos con el comando `docker load`.
+Con este método podemos guardar una imagen que tengamos en un fichero `.tar` (con el comando `docker save`) y luego podemos importar la misma imagen que tenemor en el fichero `.tar` donde lo necesitemos (con el comando `docker load`).
 
-Vamos a guardar la imagen que creamos en el caso anterior en un fichero tar:
+Vamos a guardar la imagen que creamos en el caso anterior (my-node-server:1.0) en un fichero .tar:
 
     $ docker save my-node-server:1.0 > mynodeserver.tar
 
 A continuación vamos a borrar la imagen (si el contenedor aun esta corriendo hay que pararlo y borrarlo antes de borrar la imagen):
 
+    $ docker stop new-node-server
+    new-node-server
+    $ docker rm new-node-server
+    new-node-server
+    
     $ docker image ls |grep my-node-server
     my-node-server                                          1.0                  4c9d7b781a89        8 minutes ago       945MB
     my-node-server                                          latest               8e21de81395b        21 hours ago        994MB
@@ -158,4 +183,4 @@ Y ahora vamos a volver a crear la imagen a partir del fichero tar:
     955b95942808: Loading layer [==================================================>]  3.584kB/3.584kB
     Loaded image: my-node-server:1.0
 
-A partir de aquí se podría arrancar un contenedor usando la imagen que hemos cargado.
+A partir de aquí se podría arrancar un contenedor usando la imagen que hemos cargado. Esta opción es muy útil si se quiere compartir imagenes.

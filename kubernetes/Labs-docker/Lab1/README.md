@@ -1,3 +1,7 @@
+### Instrucciones Laboratorio 1 - Docker - Gestión de contenedores
+
+En este laboratorio vamos a poner en practica la gestion de contenedores.
+
 #### 1. Ejecutar un proceso dentro de un contenedor
 
 Comando para ejecutar un contenedor con un proceso ejecutándose dentro:
@@ -43,7 +47,7 @@ Todas las líneas siguientes de la salida son generadas por el proceso que ejecu
 
 Es posible que también hayas notado que la palabra clave `latest` aparece algunas veces. Cada imagen tiene una versión (también llamada etiqueta), y si no especifica una versión explícitamente, Docker la asume automáticamente como la última versión (latest).
 
-Si ejecutas el contenedor anterior nuevamente en tu entorno, las primeras cinco líneas de la salida no aparecerán, ya que Docker encontrará la imagen del contenedor en el cregistry local, por lo que no tendrá que descargarla. Inténtalo y verifica:
+Si ejecutas el contenedor anterior nuevamente en tu entorno, las primeras cinco líneas de la salida no aparecerán, ya que Docker encontrará la imagen del contenedor en el registry local, por lo que no tendrá que descargarla. Inténtalo y verifica:
 
     $ docker container run centos ping -c 5 127.0.0.1
 
@@ -54,11 +58,11 @@ El comando Docker sería el siguiente:
 
     $ docker container run -d --name quotes alpine /bin/sh -c "while :; do echo 'esto es una prueba'; printf '\n'; sleep 5; done"
 
-En la expresión anterior, usaste dos nuevos parámetros de línea de comando, `-d` y `–name`. La `-d` le dice a Docker que ejecute el proceso del contenedor como un Demonio de Linux. El parámetro `–name` se puede utilizar para dar al contenedor un nombre explícito en este ejemplo (quotes).
+En la expresión anterior, usaste dos nuevos parámetros de línea de comando, `-d` y `--name`. La opción `-d` le indica a Docker que ejecute el proceso del contenedor en background. El parámetro `--name` se usa para dar al contenedor un nombre explícito en este ejemplo (quotes).
 
 Si no especificas un nombre de contenedor explícito, Docker asignará automáticamente al contenedor un nombre aleatorio pero único.
 
-Una conclusión importante es que el nombre del contenedor debe ser único. Asegúrate de que el contenedor de citas textuales esté activo y en ejecución:
+Una conclusión importante es que el nombre del contenedor debe ser único. Asegúrate de que el contenedor que acabamos de crear esté activo y en ejecución:
 
     $ docker container ls -l
 
@@ -69,7 +73,7 @@ Comprueba los logs del contenedor:
 
 #### 3. Listando contenedores
 
-A medida que continúes ejecutando contenedores a lo largo del tiempo tendrás muchos en tu sistema. Para averiguar qué se está ejecutando actualmente en tu host, puede utilizar el comando container ls de la siguiente manera:
+A medida que continúes ejecutando contenedores a lo largo del tiempo tendrás muchos en tu sistema. Para averiguar qué se está ejecutando actualmente en tu host, puede utilizar el siguiente comando:
 
     $ docker container ls
 
@@ -82,7 +86,7 @@ Por defecto, Docker genera siete columnas con los siguientes significados:
 [imagen1]: imagenes/Container-ls.png
 
 
-Si deseas listar todos los contenedores definidos en tu sistema, puede utilizar el parámetro `-a` o `–all` como se muestra a continuación:
+Si deseas listar todos los contenedores definidos en tu sistema, puede utilizar el parámetro `-a` o `--all` como se muestra a continuación:
 
     $ docker container ls -a
 
@@ -117,29 +121,21 @@ En el comando anterior, el nombre del contenedor se utiliza para especificar el 
 
 #### 5. ¿Cómo obtener el ID de un contenedor?
 
-Hay varias maneras de hacerlo. La forma manual es listar todos los contenedores en ejecución y encontrar el que estás buscando en la lista. Sólo tienes que copiar su ID desde allí.
+Hay varias maneras de hacerlo. La forma manual es listar todos los contenedores en ejecución y encontrar el que estás buscando en la lista. Sólo tienes que copiar su ID desde allí, por ejemplo:
 
-Una forma más automatizada es usar shell scripting y variables de entorno. Por ejemplo, si quieres obtener el ID del contenedor del ejercicio anterior, aquí hay un ejemplo:
+    $ docker container ls -a
+    $ docker container ls -a | grep quotes | awk '{print $1}'
 
-    $ export CONTAINER_ID = $(docker container ls | grep quotes | awk '{print $1}')
-
-Aquí utilizamos AWK para obtener el primer campo que es el ID del contenedor. Ahora, en lugar de utilizar el nombre del contenedor, puedes utilizar la variable $CONTAINER_ID en tu expresión:
-
-    $ docker container stop $CONTAINER_ID
-
-Una vez que detienes la ejecución del contenedor, su estado cambia a Exited (terminado).
-
-Puedes reiniciar un contenedor detenido con el comando `docker container start`.
-
+Aquí utilizamos AWK para obtener el primer campo que es el ID del contenedor.
 
 #### 6. Eliminando contenedores
 
 El comando para eliminar un contenedor es el siguiente:
 
-    $ docker container rm <container ID>
+    $ docker container rm <container ID o container name>
 
-Alternativamente, también puedes usar este comando:
+Para nuestro contenedor por ejemplo:
 
-    $ docker container rm <container name>
+    $ docker container rm quotes
 
-A veces, eliminar un contenedor en ejecución no funcionará; Si desea forzar la eliminación, puedes utilizar el parámetro de línea de comandos `-f` o `–force`.
+A veces, eliminar un contenedor en ejecución no funcionará; Si desea forzar la eliminación, puedes utilizar el parámetro de línea de comandos `-f` o `--force`.
