@@ -1,250 +1,117 @@
-## State Persistence
+### Instrucciones Laboratorio 4 - Kubernetes - Almacenamiento Persistente
 
-kubernetes.io > Documentation > Tasks > Configure Pods and Containers > [Configure a Pod to Use a Volume for Storage](https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/)
+En este laboratorio practicaremos como crear y usar volumenes persistentes estáticos.
 
-kubernetes.io > Documentation > Tasks > Configure Pods and Containers > [Configure a Pod to Use a PersistentVolume for Storage](https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/)
+1. Abrir una `shell al minikube` y crear un directorio:
 
-## Define volumes
+       $ minikube ssh
+       $ sudo mkdir /mnt/data
 
-#### 1. Create busybox pod with two containers, each one will have the image busybox and will run the 'sleep 3600' command. Make both containers mount an emptyDir at '/etc/foo'. Connect to the second busybox, write the first column of '/etc/passwd' file to '/etc/foo/passwd'. Connect to the first busybox and write '/etc/foo/passwd' file to standard output. Delete pod.
+2. En el directorio `/mnt/data`, crear un fichero `index.html` y comprobar su contenido:
 
-<details><summary>show</summary>
-<p>
+       $ sudo sh -c "echo 'Hello from Kubernetes storage' > /mnt/data/index.html"
+       $ cat /mnt/data/index.html
+       Hello from Kubernetes storage
 
-*This question is probably a better fit for the 'Multi-container-pods' section but I'm keeping it here as it will help you get acquainted with state*
+3. Salir de la shell del minikube:
 
-Easiest way to do this is to create a template pod with:
+       $ exit
 
-```bash
-kubectl run busybox --image=busybox --restart=Never -o yaml --dry-run -- /bin/sh -c 'sleep 3600' > pod.yaml
-vi pod.yaml
-```
-Copy paste the container definition and type the lines that have a comment in the end:
+4. Ahora crearemos un volumen persistente de tipo hostPath. Kubernetes admite hostPath para el desarrollo y las pruebas en un clúster de un solo nodo. Un hostPath PersistentVolume utiliza un archivo o directorio en el nodo para emular el almacenamiento conectado a la red. No se debe usar en un clúster en producción. Crearemos el fichero `pv-volume.yaml` con la definición del PV como se indica a continuación:    
 
-```YAML
-apiVersion: v1
-kind: Pod
-metadata:
-  creationTimestamp: null
-  labels:
-    run: busybox
-  name: busybox
-spec:
-  dnsPolicy: ClusterFirst
-  restartPolicy: Never
-  containers:
-  - args:
-    - /bin/sh
-    - -c
-    - sleep 3600
-    image: busybox
-    imagePullPolicy: IfNotPresent
-    name: busybox
-    resources: {}
-    volumeMounts: #
-    - name: myvolume #
-      mountPath: /etc/foo #
-  - args:
-    - /bin/sh
-    - -c
-    - sleep 3600
-    image: busybox
-    name: busybox2 # don't forget to change the name during copy paste, must be different from the first container's name!
-    volumeMounts: #
-    - name: myvolume #
-      mountPath: /etc/foo #
-  volumes: #
-  - name: myvolume #
-    emptyDir: {} #
-```
+       $ vi pv-volume.yaml
 
-Connect to the second container:
+       apiVersion: v1
+       kind: PersistentVolume
+       metadata:
+         name: task-pv-volume
+         labels:
+           type: local
+       spec:
+         storageClassName: manual
+         capacity:
+           storage: 3Gi
+         accessModes:
+           - ReadWriteOnce
+         hostPath:
+           path: "/mnt/data"
 
-```bash
-kubectl exec -it busybox -c busybox2 -- /bin/sh
-cat /etc/passwd | cut -f 1 -d ':' > /etc/foo/passwd
-cat /etc/foo/passwd # confirm that stuff has been written successfully
-exit
-```
+       $ kubectl apply -f pv-volume.yaml
 
-Connect to the first container:
+5. Mostrar el PV creado:
 
-```bash
-kubectl exec -it busybox -c busybox -- /bin/sh
-mount | grep foo # confirm the mounting
-cat /etc/foo/passwd
-exit
-kubectl delete po busybox
-```
+       $ kubectl get pv task-pv-volume
+       NAME             CAPACITY   ACCESSMODES   RECLAIMPOLICY   STATUS      CLAIM     STORAGECLASS   REASON    AGE
+       task-pv-volume   3Gi       RWO           Retain          Available             manual                   4s
 
-</p>
-</details>
+6. El siguiente paso sería crear un PersistentVolumeClaim. Crearemos el fichero `pv-claim.yaml` como se indica a continuación:    
 
+       $ vi pv-claim.yaml
 
-#### 2. Create a PersistentVolume of 10Gi, called 'myvolume'. Make it have accessMode of 'ReadWriteOnce' and 'ReadWriteMany', storageClassName 'normal', mounted on hostPath '/etc/foo'. Save it on pv.yaml, add it to the cluster. Show the PersistentVolumes that exist on the cluster
+       apiVersion: v1
+       kind: PersistentVolumeClaim
+       metadata:
+         name: task-pv-claim
+       spec:
+         storageClassName: manual
+         accessModes:
+           - ReadWriteOnce
+         resources:
+           requests:
+             storage: 3Gi
 
-<details><summary>show</summary>
-<p>
+       $ kubectl apply -f pv-claim.yaml
 
-```bash
-vi pv.yaml
-```
+7. Después de crear el PersistentVolumeClaim, Kubernetes busca un PersistentVolume que satisfaga los requisitos solicitados. Si encuentra un PersistentVolume adecuado se hace el bound del claim y el volúmen. Mostremos otra vez el PV y veremos que en el estado muestre `Bound`:
 
-```YAML
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: myvolume
-spec:
-  storageClassName: normal
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-    - ReadWriteMany
-  hostPath:
-    path: /etc/foo
-```
+       $ kubectl get pv task-pv-volume
+       NAME             CAPACITY   ACCESSMODES   RECLAIMPOLICY   STATUS    CLAIM                   STORAGECLASS   REASON    AGE
+       task-pv-volume   3Gi       RWO           Retain          Bound     default/task-pv-claim   manual                   2m
 
-Show the PersistentVolumes:
+8. Ahora veamos el PersistentVolumeClaim:
 
-```bash
-kubectl create -f pv.yaml
-# will have status 'Available'
-kubectl get pv
-```
+       $ kubectl get pvc task-pv-claim
+       NAME            STATUS    VOLUME           CAPACITY   ACCESSMODES   STORAGECLASS   AGE
+       task-pv-claim   Bound     task-pv-volume   3Gi       RWO           manual         30s
 
-</p>
-</details>
+9. El siguiente paso sería crear un Pod que use nuestro PVC como se indica a continuación, observe que la referencia en la definición del pod es a un PVC y no ha un PV:
 
-#### 3. Create a PersistentVolumeClaim for this storage class, called mypvc, a request of 4Gi and an accessMode of ReadWriteOnce, with the storageClassName of normal, and save it on pvc.yaml. Create it on the cluster. Show the PersistentVolumeClaims of the cluster. Show the PersistentVolumes of the cluster
+       $ vi pv-pod.yaml
 
-<details><summary>show</summary>
-<p>
+       apiVersion: v1
+       kind: Pod
+       metadata:
+         name: task-pv-pod
+       spec:
+         volumes:
+           - name: task-pv-storage
+             persistentVolumeClaim:
+               claimName: task-pv-claim
+         containers:
+           - name: task-pv-container
+             image: nginx
+             ports:
+               - containerPort: 80
+                 name: "http-server"
+             volumeMounts:
+               - mountPath: "/usr/share/nginx/html"
+                 name: task-pv-storage
 
-```bash
-vi pvc.yaml
-```
+       $ kubectl apply -f pv-pod.yaml
 
-```YAML
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: mypvc
-spec:
-  storageClassName: normal
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 4Gi
-```
+10. Verificar que el pod está corriendo:
 
-Create it on the cluster:
+        $ kubectl get pod task-pv-pod
 
-```bash
-kubectl create -f pvc.yaml
-```
+11. Ejecute una shell al pod:
 
-Show the PersistentVolumeClaims and PersistentVolumes:
+        $ kubectl exec -it task-pv-pod -- /bin/bash
 
-```bash
-kubectl get pvc # will show as 'Bound'
-kubectl get pv # will show as 'Bound' as well
-```
+12. Desde esta shell del pod verificaremos que nginx esta sirviendo nuestro fichero index.html desde el volumen hostPath (asegurese de estar en la shell del pod):
 
-</p>
-</details>
+        # apt update
+        # apt install curl
+        # curl http://localhost/
+        Hello from Kubernetes storage
 
-#### 4. Create a busybox pod with command 'sleep 3600', save it on pod.yaml. Mount the PersistentVolumeClaim to '/etc/foo'. Connect to the 'busybox' pod, and copy the '/etc/passwd' file to '/etc/foo/passwd'
-
-<details><summary>show</summary>
-<p>
-
-Create a skeleton pod:
-
-```bash
-kubectl run busybox --image=busybox --restart=Never -o yaml --dry-run -- /bin/sh -c 'sleep 3600' > pod.yaml
-vi pod.yaml
-```
-
-Add the lines that finish with a comment:
-
-```YAML
-apiVersion: v1
-kind: Pod
-metadata:
-  creationTimestamp: null
-  labels:
-    run: busybox
-  name: busybox
-spec:
-  containers:
-  - args:
-    - /bin/sh
-    - -c
-    - sleep 3600
-    image: busybox
-    imagePullPolicy: IfNotPresent
-    name: busybox
-    resources: {}
-    volumeMounts: #
-    - name: myvolume #
-      mountPath: /etc/foo #
-  dnsPolicy: ClusterFirst
-  restartPolicy: Never
-  volumes: #
-  - name: myvolume #
-    persistentVolumeClaim: #
-      claimName: mypvc #
-status: {}
-```
-
-Create the pod:
-
-```bash
-kubectl create -f pod.yaml
-```
-
-Connect to the pod and copy '/etc/passwd' to '/etc/foo/passwd':
-
-```bash
-kubectl exec busybox -it -- cp /etc/passwd /etc/foo/passwd
-```
-
-</p>
-</details>
-
-#### 5. Create a second pod which is identical with the one you just created (you can easily do it by changing the 'name' property on pod.yaml). Connect to it and verify that '/etc/foo' contains the 'passwd' file. Delete pods to cleanup
-
-<details><summary>show</summary>
-<p>
-
-Create the second pod, called busybox2:
-
-```bash
-vim pod.yaml
-# change 'metadata.name: busybox' to 'metadata.name: busybox2'
-kubectl create -f pod.yaml
-kubectl exec busybox2 -- ls /etc/foo # will show 'passwd'
-# cleanup
-kubectl delete po busybox busybox2
-```
-
-</p>
-</details>
-
-#### 6. Create a busybox pod with 'sleep 3600' as arguments. Copy '/etc/passwd' from the pod to your local folder
-
-<details><summary>show</summary>
-<p>
-
-```bash
-kubectl run busybox --image=busybox --restart=Never -- sleep 3600
-kubectl cp busybox:/etc/passwd ./passwd # kubectl cp command
-# previous command might report an error, feel free to ignore it since copy command works
-cat passwd
-```
-
-</p>
-</details>
+13. Si vemos el mensaje `Hello from Kubernetes storage` es que todo funciona correctamente.

@@ -1,4 +1,4 @@
-### Instrucciones Laboratorio 1 - Kubernetes - Labels y anotaciones
+### Instrucciones Laboratorio 2 - Kubernetes - Labels y anotaciones
 
 En este laboratorio practicaremos como crear y usar etiquetas y anotaciones.
 
