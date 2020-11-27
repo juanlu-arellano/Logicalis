@@ -1,7 +1,7 @@
-## Guia de instalación usando DHCP temporal y asignando IPs fijas
+## Guia de instalación
 
 
-### DNS configuration:
+### Configuración DNS Server nodo bastión
 
 https://www.itzgeek.com/how-tos/linux/centos-how-tos/configure-dns-bind-server-on-centos-7-rhel-7.html
 https://www.unixmen.com/setting-dns-server-centos-7/
@@ -13,6 +13,9 @@ Observaciones:
        export https_proxy=http://<PROXY>
        export http_proxy=http://<PROXY>
        export no_proxy=<IP_BASTION>,api.<CLUSTER_OCP>.<DOMINIO>,api-int.<CLUSTER_OCP>.<DOMINIO>,.<CLUSTER_OCP>.<DOMINIO>,.<DOMINIO>,<VCENTER>
+- Enlace para descargar el software para un Trial:
+
+https://www.redhat.com/en/technologies/cloud-computing/openshift/try-it/success
 
 
 1. Instalar paquetes de DNS:
@@ -49,56 +52,50 @@ Observaciones:
 
 	Añadir las zonas:
 
-       zone "emea.segur.test" IN {
+       zone "mayor.test" IN {
                type master;
-               file "emea.segur.test";
+               file "mayor.test";
                allow-update { none; };
        };
 
        zone "77.20.10.in-addr.arpa" IN {
                type master;
-               file "reverse.emea.segur.test";
+               file "reverse.mayor.test";
                allow-update { none; };
        };
 
 	Configurar ficheros dns y reverse:
 
-       $ vi /var/named/emea.segur.test
+       $ vi /var/named/mayor.test
 
        $TTL 86400
-       @   IN  SOA     bastion-test.emea.segur.test. root.emea.segur.test. (
+       @   IN  SOA     bastion.mayor.test. root.mayor.test. (
                2011071001  ;Serial
                3600        ;Refresh
                1800        ;Retry
                604800      ;Expire
                86400       ;Minimum TTL
        )
-       @       IN  NS          bastion-test.emea.segur.test.
-       bastion-test           IN  A   10.20.77.181
-       esdc1svdla037          IN  A   10.20.77.182
-       esdc1svdla038          IN  A   10.20.77.183
-       esdc1svdla039          IN  A   10.20.77.184
-       esdc1svdla040          IN  A   10.20.77.185
-       esdc1svdla041          IN  A   10.20.77.186
-       esdc1svdla042          IN  A   10.20.77.187
-       api.ocpesdc1lab01      IN  A   10.20.77.181
-       api-int.ocpesdc1lab01  IN  A   10.20.77.181
-       apps.ocpesdc1lab01     IN  A   10.20.77.181
-       *.apps.ocpesdc1lab01   IN  A   10.20.77.181
-       etcd-0.ocpesdc1lab01   IN  A   10.20.77.183
-       etcd-1.ocpesdc1lab01   IN  A   10.20.77.184
-       etcd-2.ocpesdc1lab01   IN  A   10.20.77.185
+       @       IN  NS          bastion.mayor.test.
+       bastion          IN  A   10.20.77.181
+       bootstrap        IN  A   10.20.77.182
+       master0          IN  A   10.20.77.183
+       master1          IN  A   10.20.77.184
+       master2          IN  A   10.20.77.185
+       worker0          IN  A   10.20.77.186
+       worker1          IN  A   10.20.77.187
+       worker2          IN  A   10.20.77.188
+       api.ocptest      IN  A   10.20.77.181
+       api-int.ocptest  IN  A   10.20.77.181
+       *.apps.ocptest   IN  A   10.20.77.181
 
-       _etcd-server-ssl._tcp.ocpesdc1lab01.emea.segur.test. 86400 IN SRV 0 10 2380 etcd-0.ocpesdc1lab01.emea.segur.test.
-       _etcd-server-ssl._tcp.ocpesdc1lab01.emea.segur.test. 86400 IN SRV 0 10 2380 etcd-1.ocpesdc1lab01.emea.segur.test.
-       _etcd-server-ssl._tcp.ocpesdc1lab01.emea.segur.test. 86400 IN SRV 0 10 2380 etcd-2.ocpesdc1lab01.emea.segur.test.
 
 	Reverse:
 
-       $ vi  /var/named/reverse.emea.segur.test
+       $ vi  /var/named/reverse.mayor.test
 
        $TTL 86400
-       @ IN SOA bastion-test.emea.segur.test. root.emea.segur.test. (
+       @ IN SOA bastion.mayor.test. root.mayor.test. (
        2014112511 ;Serial
        3600 ;Refresh
        1800 ;Retry
@@ -106,21 +103,22 @@ Observaciones:
        86400 ;Minimum TTL
        )
        ;Name Server Information
-       @ IN NS bastion-test.emea.segur.test.
+       @ IN NS bastion.mayor.test.
        ;Reverse lookup for Name Server
-       181 IN PTR bastion-test.emea.segur.test.
+       181 IN PTR bastion.mayor.test.
        ;PTR Record IP address to HostName
-       182 IN PTR esdc1svdla037.emea.segur.test.
-       183 IN PTR esdc1svdla038.emea.segur.test.
-       184 IN PTR esdc1svdla039.emea.segur.test.
-       185 IN PTR esdc1svdla040.emea.segur.test.
-       186 IN PTR esdc1svdla041.emea.segur.test.
-       187 IN PTR esdc1svdla042.emea.segur.test.
+       182 IN PTR bootstrap.mayor.test.
+       183 IN PTR master0.mayor.test.
+       184 IN PTR master1.mayor.test.
+       185 IN PTR master2.mayor.test.
+       186 IN PTR worker0.mayor.test.
+       187 IN PTR worker1.mayor.test.
+       187 IN PTR worker2.mayor.test.
 
 	Para chequear el fichero:
 
-       $ named-checkzone emea.segur.test /var/named/emea.segur.test
-       zone emea.segur.test/IN: loaded serial 2011071001
+       $ named-checkzone mayor.test /var/named/mayor.test
+       zone mayor.test/IN: loaded serial 2011071001
        OK
 
 3. Reiniciar el servicio:
@@ -137,37 +135,33 @@ Observaciones:
 
        $ vi /etc/resolv.conf
 
-       nameserver 192.168.1.2
+       nameserver <el que este>
+       nameserver 10.20.77.181
 
     Comprobar que el DNS resuelve correctamente:
 
-       dig esdc1svdla037.emea.segur.test +short
-       dig esdc1svdla038.emea.segur.test +short
-       dig esdc1svdla039.emea.segur.test +short
-       dig esdc1svdla040.emea.segur.test +short
-       dig esdc1svdla041.emea.segur.test +short
-       dig esdc1svdla042.emea.segur.test +short
+       dig bootstrap.mayor.test +short
+       dig master0.mayor.test +short
+       dig master1.mayor.test +short
+       dig master2.mayor.test +short
+       dig worker0.mayor.test +short
+       dig worker1.mayor.test +short
+       dig worker1.mayor.test +short
 
-       dig etcd-0.ocpesdc1lab01.emea.segur.test +short
-       dig etcd-1.ocpesdc1lab01.emea.segur.test +short
-       dig etcd-2.ocpesdc1lab01.emea.segur.test +short
+       dig -x 10.20.77.182 +short
+       dig -x 10.20.77.183 +short
+       dig -x 10.20.77.184 +short
+       dig -x 10.20.77.185 +short
+       dig -x 10.20.77.186 +short
+       dig -x 10.20.77.187 +short
+       dig -x 10.20.77.188 +short
 
-       dig -x 10.20.97.166 +short
-       dig -x 10.20.97.167 +short
-       dig -x 10.20.97.168 +short
-       dig -x 10.20.97.169 +short
-       dig -x 10.20.97.170 +short
-       dig -x 10.20.97.171 +short
-
-       dig api.ocpesdc1lab01.emea.segur.test +short
-       dig api-int.ocpesdc1lab01.emea.segur.test +short
-       dig *.apps.ocpesdc1lab01.emea.segur.test +short
-
-       dig _etcd-server-ssl._tcp.ocpesdc1lab01.emea.segur.test SRV +short
+       dig api.ocptest.mayor.test +short
+       dig api-int.ocptest.mayor.test +short
+       dig *.apps.ocptest.mayor.test +short
 
 
-
-### Load Balancer:
+### Configurar Load Balancer en el nodo bastión
 
 https://cbonte.github.io/haproxy-dconv/1.7/configuration.html
 
@@ -236,10 +230,10 @@ https://www.howtoforge.com/tutorial/how-to-setup-haproxy-as-load-balancer-for-ng
        backend ocp-api-server
            balance source
            mode tcp
-           server esdc1svdla037 esdc1svdla037.emea.segur.test:6443 check
-           server esdc1svdla038 esdc1svdla038.emea.segur.test:6443 check
-           server esdc1svdla039 esdc1svdla039.emea.segur.test:6443 check
-           server esdc1svdla040 esdc1svdla040.emea.segur.test:6443 check
+           server bootstrap bootstrap.mayor.test:6443 check
+           server master0 master0.mayor.test:6443 check
+           server master1 master1.mayor.test:6443 check
+           server master2 master2.mayor.test:6443 check
 
        #---------------------------------------------------------------------
        # main frontend for OCP config server
@@ -256,10 +250,10 @@ https://www.howtoforge.com/tutorial/how-to-setup-haproxy-as-load-balancer-for-ng
        backend machine-config-server
            balance source
            mode tcp
-           server esdc1svdla037 esdc1svdla037.emea.segur.test:22623 check
-           server esdc1svdla038 esdc1svdla038.emea.segur.test:22623 check
-           server esdc1svdla039 esdc1svdla039.emea.segur.test:22623 check
-           server esdc1svdla040 esdc1svdla040.emea.segur.test:22623 check
+           server bootstrap bootstrap.mayor.test:22623 check
+           server master0 master0.mayor.test:22623 check
+           server master1 master1.mayor.test:22623 check
+           server master2 master2.mayor.test:22623 check
 
        #---------------------------------------------------------------------
        # main frontend for OCP ingress (router) HTTP server
@@ -276,8 +270,9 @@ https://www.howtoforge.com/tutorial/how-to-setup-haproxy-as-load-balancer-for-ng
        backend ingress-http
            balance source
            mode tcp
-           server esdc1svdla041 esdc1svdla041.emea.segur.test:80 check
-           server esdc1svdla042 esdc1svdla042.emea.segur.test:80 check
+           server worker0 worker0.mayor.test:80 check
+           server worker1 worker1.mayor.test:80 check
+           server worker2 worker2.mayor.test:80 check
 
        #---------------------------------------------------------------------
        # main frontend for OCP ingress (router) HTTPS server
@@ -294,9 +289,9 @@ https://www.howtoforge.com/tutorial/how-to-setup-haproxy-as-load-balancer-for-ng
        backend ingress-https
            balance source
            mode tcp
-           server esdc1svdla041 esdc1svdla041.emea.segur.test:443 check
-           server esdc1svdla042 esdc1svdla042.emea.segur.test:443 check
-
+           server worker0 worker0.mayor.test:443 check
+           server worker1 worker1.mayor.test:443 check
+           server worker2 worker2.mayor.test:443 check
 
 3. Comprobar que el fichero es correcto y reiniciar el servicio:
 
@@ -309,7 +304,7 @@ https://www.howtoforge.com/tutorial/how-to-setup-haproxy-as-load-balancer-for-ng
        $ systemctl enable haproxy
 
 
-### DHCP Configuration
+### Configuración DHCP Server en el nodo bastión
 
 1. Configurar el servidor dhcp:
 
@@ -322,7 +317,7 @@ https://www.howtoforge.com/tutorial/how-to-setup-haproxy-as-load-balancer-for-ng
        #   see /usr/share/doc/dhcp*/dhcpd.conf.example
        #   see dhcpd.conf(5) man page
        #
-       option domain-name "emea.segur.test";
+       option domain-name "mayor.test";
        option domain-name-servers 10.20.77.181;
        max-lease-time 7200;
        default-lease-time 900;
@@ -331,34 +326,38 @@ https://www.howtoforge.com/tutorial/how-to-setup-haproxy-as-load-balancer-for-ng
        subnet 10.20.77.0 netmask 255.255.255.0{
 
          option subnet-mask 255.255.255.0;
-         option domain-search "emea.segur.test";
+         option domain-search "mayor.test";
          option routers 10.20.77.254;
        }
 
-       host esdc1svdla037 {
+       host bootstrap {
          hardware ethernet 00:50:56:94:68:7c;
-         fixed-address esdc1svdla037.emea.segur.test;
+         fixed-address bootstrap.mayor.test;
        }
-       host esdc1svdla038 {
+       host master0 {
          hardware ethernet 00:50:56:94:39:3d;
-         fixed-address esdc1svdla038.emea.segur.test;
+         fixed-address master0.mayor.test;
        }
-       host esdc1svdla039 {
+       host master1 {
          hardware ethernet 00:50:56:94:8c:f2;
-         fixed-address esdc1svdla039.emea.segur.test;
+         fixed-address master1.mayor.test;
        }
-       host esdc1svdla040 {
+       host master2 {
          hardware ethernet 00:50:56:94:9d:0e;
-         fixed-address esdc1svdla040.emea.segur.test;
+         fixed-address master2.mayor.test;
        }
-       host esdc1svdla041 {
+       host worker0 {
          hardware ethernet 00:50:56:94:57:b5;
-         fixed-address esdc1svdla041.emea.segur.test;
+         fixed-address worker0.mayor.test;
        }
-       host esdc1svdla042 {
+       host worker1 {
          hardware ethernet 00:50:56:94:2e:0b;
-         fixed-address esdc1svdla042.emea.segur.test;
+         fixed-address worker1.mayor.test;
        }
+       host worker1 {
+         hardware ethernet 00:50:56:94:2e:0b;
+         fixed-address worker1.mayor.test;
+       }       
        deny unknown-clients;
 
 2. Reiniciar los servicios:
@@ -368,7 +367,7 @@ https://www.howtoforge.com/tutorial/how-to-setup-haproxy-as-load-balancer-for-ng
        $ systemctl enable --now dhcpd
 
 
-### WEB SERVER
+### Configuración WEB Server en el nodo bastión
 
 1. Instalar httpd:
 
@@ -393,7 +392,7 @@ https://www.howtoforge.com/tutorial/how-to-setup-haproxy-as-load-balancer-for-ng
 
 By default the web server serves files from: /var/www/html/
 
-### En el nodo Bastión:
+### Descarcar el Sw y prepar la instalación. Desde el nodo bastión
 
 1. Deshabilitar el firewall:
 
@@ -405,23 +404,23 @@ By default the web server serves files from: /var/www/html/
        $ mkdir /opt/ocp4
        $ cd /opt/ocp4
 
-3. Descargar sw de instalación y oc (cambiar por la versión que querramos instalar):
+3. Descargar sw de instalación y oc (cambiar por la versión que querramos instalar). En este caso vamos a usar lo que descarguemos del enlace del Trial:
 
 	Comprobar en https://mirror.openshift.com/pub/openshift-v4/clients/ocp/
 
        $ yum install -y wget
-       $ wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.3.8/openshift-client-linux-4.3.8.tar.gz
-       $ wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.3.8/openshift-install-linux-4.3.8.tar.gz
+       $ wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.20/openshift-client-linux-4.5.20.tar.gz
+       $ wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.20/openshift-install-linux-4.5.20.tar.gz
 
 4. Obtener el  pull secret from https://cloud.redhat.com/openshift/install/vsphere/user-provisioned
 
 5. Descomprimir los ficheros de instalación y del oc:
 
        $ ls
-        openshift-client-linux-4.3.8.tar.gz  openshift-install-linux-4.3.8.tar.gz
+        openshift-client-linux-4.5.20.tar.gz  openshift-install-linux-4.5.20.tar.gz
 
-       $ tar -xvf openshift-install-linux-4.3.8.tar.gz
-       $ tar -xvf openshift-client-linux-4.3.8.tar.gz
+       $ tar -xvf openshift-install-linux-4.5.20.tar.gz
+       $ tar -xvf openshift-client-linux-4.5.20.tar.gz
 
 6. Mover el oc a un directorio que esté en el PATH:
 
@@ -442,20 +441,20 @@ By default the web server serves files from: /var/www/html/
 
 9. Crear fichero install-config con los datos reales del cluster (usar la clave ssh publica generada en el paso anterior y el pullSecret):
 
-       $ vi install/install-config.yaml
+       $ vi install-config.yaml
 
        apiVersion: v1
-       baseDomain: poc.com
+       baseDomain: mayor.test
        compute:
        - hyperthreading: Enabled
          name: worker
-         replicas: 0
+         replicas: 3
        controlPlane:
          hyperthreading: Enabled
          name: master
          replicas: 3
        metadata:
-         name: cluster2
+         name: ocptest
        networking:
          clusterNetworks:
          - cidr: 10.128.0.0/14
@@ -478,150 +477,186 @@ By default the web server serves files from: /var/www/html/
        proxy:
          httpProxy: http://<username>:<pswd>@<ip>:<port>
          httpsProxy: http://<username>:<pswd>@<ip>:<port>
-         noProxy: .poc.com,.cluster2.poc.com,192.168.1.0/24,ip vcenter
+         noProxy: .mayor.test,.ocptest.mayor.test,192.168.1.0/24,ip vcenter
 
        noProxy: nodes real domains, node alias domain, vcenter ip, nodes IP ranges
 
-10. Instalar el filetranspiler:
+10. Copiar el fichero install-config.yaml al directorio de instalación y crear los manifiestos:
 
-        $ yum install -y git
-        $ git clone https://github.com/ashcrow/filetranspiler.git
-        $ yum install -y python3
-
-	Comprobar si estan el file-magic y el PyYAML y si no estan instalarlos:
-
-        $ pip3 list
-        DEPRECATION: The default format will switch to columns in the future. You can use --format=(legacy|columns) (or define a format=(legacy|columns) in your pip.conf under the [list] section) to disable this warning.
-        pip (9.0.3)
-        setuptools (39.2.0)
-
-        $ pip3 install file-magic PyYAML
-
-	Dar permisos al filetranspiler:
-
-        $ cp filetranspiler/filetranspile /usr/local/bin/
-        $ chmod +x /usr/local/bin/filetranspile
-
-10. Copiar el script prepare-ign-fixip.sh en el directorio /opt/ocp4, modificarlo con los valores del cluster a instalar y ejecutarlo:
-
-        $ ./prepare-ign-fixip.sh
+         $ cp install-config.yaml install
+         $ ./openshift-install create manifests --dir=install
 
 !OJO A partir de este punto se dispone de 24 horas para terminar la instalación, pasado ese tiempo hay que ejecutar nuevamente el script.
 
-11. Comprobar que se puede descargar el fichero:
+11. Borrar los manifiestos de los machinesets:
 
-        $ wget http://IP-WEBSERVER:81/bootstrap.ign
+        $ rm -f install/manifests/openshift/99_openshift-cluster-api_master-machines-*.yaml install/manifests/openshift/99_openshift-cluster-api_worker-machineset-*.yaml
+
+12. Modificar el siguiente manifiesto para evitar que los pods se ejecuten en los masters:
+
+        $ sed -i 's/mastersSchedulable: true/mastersSchedulable: false/' install/manifests/cluster-scheduler-02-config.yml
+
+13. Obtener los ficheros `ignition`:
+
+        $ ./openshift-install create ignition-configs --dir=install
+
+14. Crear el fichero append-bootstrap.ign:
+
+        $ vi append-bootstrap.ign
+        {
+          "ignition": {
+            "config": {
+              "append": [
+                {
+                  "source": "10.20.77.181:81/bootstrap.ign",
+                  "verification": {}
+                }
+              ]
+            },
+            "timeouts": {},
+            "version": "2.2.0"
+          },
+          "networkd": {},
+          "passwd": {},
+          "storage": {},
+          "systemd": {}
+        }
+
+15. Copiar el fichero bootstrap.ign al http server:
+
+        $ cp install/bootstrap.ign /var/www/html
+
+16. Comprobar que se puede descargar el fichero:
+
+        $ wget http://10.20.77.181:81/bootstrap.ign
+
+17. Convertir los ficheros ignition a `base64`:
+
+        $ base64 -w0 install/master.ign > install/master.64
+        $ base64 -w0 install/worker.ign > install/worker.64
+        $ base64 -w0 install/append-bootstrap.ign > install/append-bootstrap.64
+
 
 ### In the vSphere client:
 
 1. Descargar el OVA de RHCOS:
 
-      https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.3/4.3.8/
+      https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.5/4.5.6/rhcos-4.5.6-x86_64-vmware.x86_64.ova
 
 2. In the vSphere Client, create a folder in your datacenter to store your VMs.
 
-    Click the VMs and Templates view.
-    Right-click the name of your datacenter.
-    Click New Folder -> New VM and Template Folder.
-    In the window that is displayed, enter the folder name. I named it ocp
+ Create a template for the OVA image.
 
-    From the Hosts and Clusters tab, right-click your clusters name and click Deploy OVF Template.
+- From the Hosts and Clusters tab, right-click your cluster’s name and click Deploy OVF Template.
 
-    On the Select an OVF tab, specify the name of the RHCOS OVA file that you downloaded.
-    rhcos-4.3.8-x86_64-vmware.x86_64.ova
+- On the Select an OVF tab, specify the name of the RHCOS OVA file that you downloaded.
 
-    On the Select a name and folder tab, set a Virtual machine name, such as RHCOS, click the name of your vSphere cluster, and select the folder you created in the previous step.
+- On the Select a name and folder tab, set a Virtual machine name, such as RHCOS, click the name of your vSphere cluster, and select the folder you created in the previous step.
 
-    On the Select a compute resource tab, click the name of your vSphere cluster.
+- On the Select a compute resource tab, click the name of your vSphere cluster.
 
-    On the Select storage tab, configure the storage options for your VM.
+- On the Select storage tab, configure the storage options for your VM.
 
-      Select Thin Provision.
+  - Select Thin Provision or Thick Provision, based on your storage preferences.
 
-      Select the datastore that you specified in your install-config.yaml file.
+  - Select the datastore that you specified in your install-config.yaml file.
 
-    On the Select network tab, specify the network that you configured for the cluster, if available.
+- On the Select network tab, specify the network that you configured for the cluster, if available.
 
-    Do not set any value for Ignition config data and Ignition config data encoding
+- If you plan to use the same template for all cluster machine types, do not specify values on the Customize template tab.
 
-    After the template is created, edit these settings:
+ After the template deploys, deploy a VM for a machine in the cluster.
 
-      Set 4 cores, 16GB Memory y 120GB disk.
+- Right-click the template’s name and click Clone → Clone to Virtual Machine.
 
-      Configure the memory as "Reserved"
+- On the Select a name and folder tab, specify a name for the VM. You might include the machine type in the name, such as control-plane-0 or compute-1.
 
-      Set: "edit settings" -> tab "VM Options" -> sección "Advanced" -> "Latency Sensitivity" -> High
+- On the Select a name and folder tab, select the name of the folder that you created for the cluster.
 
-      Go to "edit settings" -> tab "VM Options" -> sección "Advanced" -> "Configuration parameters" -> click "Edit configuration"
+- On the Select a compute resource tab, select the name of a host in your datacenter.
 
-      Add configuration params:
-      guestinfo.ignition.config.data.encoding -> base64
-      disk.EnableUUID -> TRUE
-      Do not configure "guestinfo.ignition.config.data"
+- Optional: On the Select storage tab, customize the storage options.
 
-3. Create the VMs:
+- On the Select clone options, select Customize this virtual machine’s hardware.
 
-	In the vCenter console select the template generated righ now, Right Click -> clone -> clone to virtual machine
+- On the Customize hardware tab, click VM Options → Advanced.
 
-	On the Select clone options, select Customize this virtual machines hardware.
+  - Optional: In the event of cluster performance issues, from the Latency Sensitivity list, select High.
 
-	Customize Hardware -> tab Virtual Hardware ->
+  - Click Edit Configuration, and on the Configuration Parameters window, click Add Configuration Params. Define the following parameter names and values:
+
+    - guestinfo.ignition.config.data: Paste the contents of the base64-encoded Ignition config file for this machine type.
+
+    - guestinfo.ignition.config.data.encoding: Specify base64.
+
+    - disk.EnableUUID: Specify TRUE.
+
+ - Alternatively, prior to powering on the virtual machine add via vApp properties:
+
+   - Navigate to a virtual machine from the vCenter Server inventory.
+
+   - On the Configure tab, expand Settings and select vApp options.
+
+   - Scroll down and under Properties apply the configurations from above.
+
+- In the Virtual Hardware panel of the Customize hardware tab, modify the specified values as required. Ensure that the amount of RAM, CPU, and disk storage meets the minimum requirements for the machine type.
 
    	bootstrap y master -> 4 vCPU, 16 GB RAM y 120 GB HD
    	infra ->  8 vCPU, 32 GB RAM y 120 GB HD + [300GB Log, 200GB metrics, 50GB alerts]
    	worker -> 8 vCPU, 16 GB RAM y 120 GB HD
 
-	En Customize Hardware -> tab VM Options -> Advanced -> Edit Configuration ->  Add Configuration Params:
+3. Crear el resto de VM del cluster.
 
-	guestinfo.ignition.config.data -> the base64 file we have created for each node (resultado del script prepare-ign-fixip.sh).
+4. Obtener las MACs de las VM y editar el fichero dhcpd.conf. Restart dhcpd:
 
-	Repeat for each node of the cluster.
+       $ systemctl restart dhcpd
 
-4. Gather the MAC address of each node and configure it in the DHCP config file. Restart dhcpd:
+5. Arrancar la VM del bootstrap y comprobar que arranca correctamente y que la instalación progresa:
 
-       systemctl restart dhcpd
+       $ ssh core@bootstrap.mayor.test
 
-5. Arrancar las VM y comprobar en la cosonla de cada una de ellas q arrancan correctamente.
+6. Una vez confirmado que el bootstrap ha arrancado bien, arrancar los masters uno a uno comprobando que cogen su ignition y después los workers.
 
-6. Ejecutar en el nodo bastion:
+7. Ejecutar en el nodo bastion el siguiente comando:
 
-       ./openshift-install --dir=/opt/ocp4/install/ wait-for bootstrap-complete --log-level=debug
+       ./openshift-install --dir=install wait-for bootstrap-complete --log-level=debug
 
-       ./openshift-install --dir=/opt/ocp4/install/ wait-for install-complete --log-level=debug
+8. En este punto ya se puede apagar el nodo bootstrap.
 
-7. If this wait-for install-complete fails it could be that the "infra" and worker nodes are not automatically "accepted", to check this:
-
-       export KUBECONFIG=/opt/ocp4/install/auth/kubeconfig
-
-8. If you list nodes with oc get nodes there will be only three nodes, the master nodes.
-If you check the pods with oc get pods --all-namespaces there will be pods in pending status because there are no nodes available
-
-	Check the CSR status:
-
-       $ oc get csr
-       NAME                                                 AGE     REQUESTOR                                                                   CONDITION
-       csr-p22zc                                            3m19s   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
-       system:etcd-server:etcd-0.ocp42cluster1.jordax.com   2m24s   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
-
-	(here there could be mucho more CSRs in pending status)
-
-	Accept them:
-
-       $ oc get csr | grep -v NAME | grep Pending | awk '{print $1}' | xargs oc adm certificate approve
-
-	Try wait-for install-complete again:
-
-       ./openshift-install --dir=/opt/ocp4/install/ wait-for install-complete --log-level=debug
+       ./openshift-install --dir=install wait-for install-complete --log-level=debug
 
 9. Para logarse en el cluster:
 
-       export KUBECONFIG=/opt/ocp4/install/auth/kubeconfig
-       oc get nodes
+       $ export KUBECONFIG=/opt/ocp4/install/auth/kubeconfig
+       $ oc get nodes
 
-10. Comprobar que todos los operators estan Available:
+10. If you list nodes with oc get nodes there will be only three nodes, the master nodes.
 
-        watch -n5 oc get clusteroperators
+	Check the CSR status:
 
+        $ oc get csr
+        NAME                                                 AGE     REQUESTOR                                                                   CONDITION
+        csr-p22zc                                            3m19s   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
+        system:etcd-server:etcd-0.ocp42cluster1.jordax.com   2m24s   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
+
+	(here there could be more CSRs in pending status)
+
+	Accept them:
+
+        $ oc get csr | grep -v NAME | grep Pending | awk '{print $1}' | xargs oc adm certificate approve
+
+ Este paso hay que repetirlo varias veces hasta que están todos los certificados aprobados y todos los nodos Ready
+
+11. Comprobar que todos los operators estan Available:
+
+        $ watch -n5 oc get clusteroperators
+
+12. Monitorizar que la instalación termina correctamente:
+
+
+13. Comprobar que todos los pods estan OK:
+
+        $ oc get pods -A
 
 ### Configurar el registry
 
@@ -693,7 +728,7 @@ If you check the pods with oc get pods --all-namespaces there will be pods in pe
 
 1. Etiquetar los nodos de "infra":
 
-       $ oc label node esdc1svdla042.emea.segur.test node-role.kubernetes.io/infra=""
+       $ oc label node worker2.mayor.test node-role.kubernetes.io/infra=""
 
 2. Comprobar que muestra el role correctamente:
 
@@ -881,9 +916,7 @@ If you check the pods with oc get pods --all-namespaces there will be pods in pe
                - key: kubernetes.io/hostname
                  operator: In
                  values:
-                 - esdc1cspla507
-                 - esdc1cspla508
-                 - esdc1cspla509
+                 - worker2
          storageClassDevices:
            - storageClassName: "prometheus-local-sc"
              devicePaths:
@@ -905,9 +938,7 @@ If you check the pods with oc get pods --all-namespaces there will be pods in pe
                - key: kubernetes.io/hostname
                  operator: In
                  values:
-                 - esdc1cspla507
-                 - esdc1cspla508
-                 - esdc1cspla509
+                 - worker2
          storageClassDevices:
            - storageClassName: "alertmanager-local-sc"
              devicePaths:
@@ -1006,10 +1037,8 @@ If you check the pods with oc get pods --all-namespaces there will be pods in pe
                - key: kubernetes.io/hostname
                  operator: In
                  values:
-                 - usdc1cspla176
-                 - usdc1cspla177
-                 - usdc1cspla178
-         storageClassDevices:
+                 - worker2
+        storageClassDevices:
            - storageClassName: "elastic-localstorage-sc"
              devicePaths:
                - /dev/sdb

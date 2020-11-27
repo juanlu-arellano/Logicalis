@@ -14,7 +14,7 @@
 
   1.3. Crear la aplicacion Jenkins:
 
-    $ oc new-app jenkins-ephemeral --param MEMORY_LIMIT=2Gi --param DISABLE_ADMINISTRATIVE_MONITORS=true --param ENABLE_OAUTH=true
+    $ oc new-app jenkins-ephemeral --param MEMORY_LIMIT=2Gi --param DISABLE_ADMINISTRATIVE_MONITORS=true --param ENABLE_OAUTH=true 
     $ oc set resources dc jenkins --limits=cpu=2 --requests=cpu=1,memory=2Gi
 
   1.4. Comprobar como despliega, cuando el pod del jenkins (en este caso **jenkins-2-2bpfg**) este **Ready** salir del watch con **Ctrl+C**:
@@ -44,28 +44,31 @@
 
     $ oc new-project $GUID-tasks --display-name="My Tasks Project"
 
-  2.2. Crear la aplicacion con la que haremos el build usando Jenkins. Este comando creara todos los recursos necesarios para la aplicacion, build configuration, image stream, deployment configuration, y service:
+  2.2. Desplegar la aplicacion para la que crearemos un pipeline en Jenkins. Este comando creara todos los recursos necesarios para la aplicacion, build configuration, image stream, deployment config, y service:
 
-    $ oc new-app jboss-eap71-openshift:1.4~https://github.com/redhat-gpte-devopsautomation/openshift-tasks
+    $ oc new-app jboss-eap71-openshift:1.4~https://github.com/redhat-gpte-devopsautomation/openshift-tasks --as-deployment-config=true
 
-  2.3. Crear el route para el acceso a la aplicacion:
+  2.3. Comprobar el progreso del build:
 
-    $ oc expose svc openshift-tasks
+    $ oc logs -f openshift-tasks-1-build
 
-  2.4. Comprobar todos los recursos creados para la aplicacion:
+  2.4. Una vez finalize el build comprobar todos los recursos que se han creado en el proyecto:
 
     $ oc get all
 
-  2.5. Deshabilitar el trigger automatico:
+  2.5. A continuacion crear un route para el acceso a la aplicacion:
+
+    $ oc expose svc openshift-tasks
+
+  2.6. Deshabilitar el trigger automatico para nuestro deploymentconfig:
 
     $ oc set triggers dc openshift-tasks --manual
 
-  2.6 Dar los permisos a correctos a la service account de jenkins para poder hacer build y deploys (esto se hace porque el jenkins y la app estan en protectos diferentes):
+  2.7. Dar los permisos a correctos a la serviceaccount de jenkins para poder hacer build y deploys (esto se hace porque el jenkins y la app estan en protectos diferentes):
 
     $ oc policy add-role-to-user edit system:serviceaccount:$GUID-cicd:jenkins -n $GUID-tasks
 
 ## 3. Crear un pipeline simple
-
 
    3.1. Logarse en el jenkins.
 

@@ -15,7 +15,7 @@ Requisitos:
   1.1. Crear el proyecto y desplegar una aplicacion desde un repositorio de Git:
 
     $ oc new-project $GUID-env
-    $ oc new-app https://github.com/redhat-gpte-devopsautomation/PrintEnv
+    $ oc new-app https://github.com/redhat-gpte-devopsautomation/PrintEnv --as-deployment-config=true
 
   1.2. Ver los logs del BuildConfig:
 
@@ -239,34 +239,50 @@ Requisitos:
 
   4.3. Comprobar que se ha creado el PV
 
+      $ oc get pv
+
   4.4. Crear politica de seguridad para el serviceaccount default para que tenga privilegios anyuid
 
-      $ oc adm policy add-scc-to-user anyuid system:serviceaccount:<namespace>:default
+      $ oc adm policy add-scc-to-user anyuid system:serviceaccount:$GUID-env:default
 
   4.5. Crear el PVC (Cambiar el GUID y poner vuestro nombre de proyecto):
 
-      apiVersion: v1
-      kind: PersistentVolumeClaim
-      metadata:
-        name: $GUID-pvc
-        namespace: <vuestro projecto>
-      spec:
-        storageClassName: ""
-        accessModes:
-        - ReadWriteMany
-        resources:
-          requests:
-            storage: 1Gi  
+       apiVersion: v1
+       kind: PersistentVolumeClaim
+       metadata:
+         name: <$GUID-pvc>
+         namespace: <$GUID-env>
+       spec:
+         storageClassName: ""
+         volumeName: <vuestro nombre de pv>
+         accessModes:
+         - ReadWriteMany
+         resources:
+           requests:
+             storage: 1Gi  
 
 
   4.6. Comprobar que se ha creado el PVC
 
-  4.7. ¿Cual es el estado del PVC? ¿Si hay algún problema como pedemos corregirlo?
+       $ oc get pvc -n $GUID-env
 
-  4.8. Una vez corregido el problema y el pvc este en status Bound, crear un "pod" a partir de una imagen de nginx, que exponga el puerto 80 y que use el PVC que hemos creado y lo monte en /usr/share/nginx/html.
+  4.7. ¿Cual es el estado del PVC? ¿Si hay algún problema como podemos corregirlo?
+
+  4.8. Una vez corregido el problema y el pvc este en status Bound, desplegar un pod nginx y configurarle como volumen el pvc que hemos creado y que lo monte en /usr/share/nginx/html.
+
+       $ oc run nginx --image=nginx
+       $ oc set volume pod/nginx --add --name=myvol --mount-path=/usr/share/nginx/html -t pvc --claim-name=<nombre-pvc>
 
   4.9. Comprobar que el pod de nginx arranca correctamente y que tiene montado el PVC
 
+       $ oc get pod
+       $ oc describe pod nginx
+
   4.10. Crear un servicio para el pod y un route para acceder desde el exterior
 
+       $ oc expose pod nginx --port=80
+       $ oc expose svc nginx
+
   4.11. Comprobar que se tiene acceso a la aplicación
+
+       $ curl <route>
