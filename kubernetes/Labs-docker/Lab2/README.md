@@ -71,13 +71,12 @@ Comprobar si el contenido del fichero index.js es correcto:
 
     $ cat index.js
 
-Ahora probamos el contenedor:
+Ahora probamos la aplicación ejecutando el index.js:
 
-    // run the index.js under /usr/src/app
     $ node index.js
     server listening on the port:::3080
 
-    // ctrl c and exit
+    // ctrl c y exit para salir
     exit
 
 En este punto la imagen esta personalizada tal y como la queremos, ya podemos crear una nueva imagen llamada `my-node-server` a partir de las modificaciones que hemos hecho al contenedor:
@@ -94,7 +93,7 @@ A continuación arrancaremos un contenedor de nombre `current-time` con la image
 
     $ docker container run -dit --name current-time -p 3080:3080 my-node-server node /usr/src/app/index.js
 
-Para probar la imagen abrir en un navegador `localhosts:3080/time`
+Para probar la imagen abrir en un navegador `localhost:3080/time`
 
 
 #### 2. Creando la imagen usando un Dockerfile
@@ -152,6 +151,7 @@ Si entramos en el contenedor que acabamos de crear veremos que el directorio `/u
     -rw-r--r--  1 root root 14290 Jun 17 14:05 package-lock.json
     -rw-r--r--  1 root root   555 Jun 17 13:28 package.json
 
+Salir del contenedor con exit
 
 #### 3. Creando la imagen importando un fichero comprimido
 
