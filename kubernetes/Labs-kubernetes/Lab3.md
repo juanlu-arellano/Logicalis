@@ -12,8 +12,17 @@ En este laboratorio practicaremos como crear y gestionar Deployments.
 
        $ vi deploy.yaml
 
- Modificar la cantidad de replicas a 2
- Añadir las siguientes lineas en el spec del container, quedando así:
+ Modificar la cantidad de replicas a 2:
+
+   sustituir:
+
+       replicas: 1
+
+   por:
+
+       replicas: 2
+
+   Modificar la sección **spec.containers** para definir el puerto 80 como containerPort quedando de esta manera:
 
        spec:
         containers:

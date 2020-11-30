@@ -105,9 +105,11 @@ En este laboratorio practicaremos como crear y usar los recursos descritos.
 14. Crear un pod nginx llamado `my-nginx` y configure una variable de entorno como 'var1=val1'. Comprobar que la variable esta definida correctamente dentro del pod:
 
  Crear el pod:
+
         $ kubectl run my-nginx --image=nginx --restart=Never --env=var1=val1 -n myns
 
  Comprobar la creación de la variable de entorno de las siguientes formas:
+
         $ kubectl exec -it my-nginx -n myns -- env
         $ kubectl exec -it my-nginx -n myns -- sh -c 'echo $var1'
         $ kubectl describe po my-nginx -n myns | grep val1
