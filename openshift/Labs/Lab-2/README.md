@@ -201,6 +201,8 @@ Requisitos:
 
 ## 4. Uso de almacenamiento persistente estático
 
+### Este paso lo habremos hecho con los prerequisitos:
+
   4.1. Exportar un FS por NFS. A continuación están los pasos para crear el servidor NFS y como exportar el FS. En nuestro caso ya teneis creado un FS con vuestro nombre en /home/nfs en el nodo bastión que contiene un fichero index.yaml y ese el FS que teneis que usar:
 
     yum install -y nfs-utils rpcbind
@@ -222,6 +224,7 @@ Requisitos:
 
   4.2. Crear un PV que haga uso del FS compartido por NFS(Sustituir el $GUID por vuestro nombre o GUID):
 
+    $ vi pv-volume.yaml
     apiVersion: v1
     kind: PersistentVolume
     metadata:
@@ -234,15 +237,16 @@ Requisitos:
       - ReadWriteOnce
       nfs:
         path: <vuestro FS exportado por NFS>
-        server: 10.20.77.181
+        server: <IP-sevidor-NFS>
       persistentVolumeReclaimPolicy: Retain
 
   4.3. Comprobar que se ha creado el PV
 
       $ oc get pv
 
-  4.4. Crear politica de seguridad para el serviceaccount default para que tenga privilegios anyuid
+  4.4. Crear un nuevo proyecto y añadir privilegios de anyuid a la service account **default**:
 
+      $ oc new-project $GUID-persistent
       $ oc adm policy add-scc-to-user anyuid system:serviceaccount:$GUID-env:default
 
   4.5. Crear el PVC (Cambiar el GUID y poner vuestro nombre de proyecto):
@@ -251,7 +255,7 @@ Requisitos:
        kind: PersistentVolumeClaim
        metadata:
          name: <$GUID-pvc>
-         namespace: <$GUID-env>
+         namespace: <$GUID-persistent>
        spec:
          storageClassName: ""
          volumeName: <vuestro nombre de pv>
@@ -264,25 +268,61 @@ Requisitos:
 
   4.6. Comprobar que se ha creado el PVC
 
-       $ oc get pvc -n $GUID-env
+       $ oc get pvc -n $GUID-persistent
 
   4.7. ¿Cual es el estado del PVC? ¿Si hay algún problema como podemos corregirlo?
 
   4.8. Una vez corregido el problema y el pvc este en status Bound, desplegar un pod nginx y configurarle como volumen el pvc que hemos creado y que lo monte en /usr/share/nginx/html.
 
-       $ oc run nginx --image=nginx
-       $ oc set volume pod/nginx --add --name=myvol --mount-path=/usr/share/nginx/html -t pvc --claim-name=<nombre-pvc>
+       $ oc create deploy nginx --image=nginx
+       $ oc set volume deployment/nginx --add --name=myvol --mount-path=/usr/share/nginx/html -t pvc --claim-name=<nombre-pvc>
 
   4.9. Comprobar que el pod de nginx arranca correctamente y que tiene montado el PVC
 
        $ oc get pod
-       $ oc describe pod nginx
+       $ oc describe pod nginx-xxx
 
   4.10. Crear un servicio para el pod y un route para acceder desde el exterior
 
-       $ oc expose pod nginx --port=80
+       $ oc expose deploy nginx --port=80
        $ oc expose svc nginx
 
   4.11. Comprobar que se tiene acceso a la aplicación
 
        $ curl <route>
+
+  4.12. Eliminar el volumen del deployment de nginx que añadimos en el punto 4.8, borrar tambien el pvc y el pv:
+
+       $ oc set volume deployment/nginx --remove --name=myvol
+       $ oc delete pvc <nombre-pvc>
+       $ oc delete pv <nombre-pv>
+
+  4.13. Crear un nuevo PVC dinamicamente (modificar el $GUID de la definición del yaml):
+
+       $ vi pvc-dinamic.yaml
+       kind: PersistentVolumeClaim
+       apiVersion: v1
+       metadata:
+         name: test-claim
+         namespace: $GUID-persistent
+         annotations:
+           volume.beta.kubernetes.io/storage-class: "managed-nfs-storage"
+       spec:
+         accessModes:
+           - ReadWriteMany
+         resources:
+           requests:
+             storage: 1Mi
+       
+       $ oc create -f pvc-dinamic.yaml
+
+  4.14. Comprobar que ocurre una vez que se crea el nuevo PVC:
+
+       $ oc get pvc
+       $ oc get pv
+
+  4.15. ¿Que ocurre al crear el PVC a partir de una StorageClass?
+
+  4.16. Añadir el nuevo PVC al deployment de nginx.
+
+
