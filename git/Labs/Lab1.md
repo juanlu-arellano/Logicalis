@@ -17,8 +17,8 @@
 - El subcomando init creará un directorio .git en el repositorio utilizado para los metadatos de Git
 (consulte el curso de Git Deep Dive para obtener más información).:
 
-       $ mkdir <mirepo>
-       $ cd mirepo
+       $ mkdir formacion-git
+       $ cd formacion-git
        $ git init
 
 4. Comprobar que se crea el directorio oculto `.git`:

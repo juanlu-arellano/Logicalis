@@ -14,7 +14,7 @@
 
   1.3. Crear la aplicacion Jenkins:
 
-    $ oc new-app jenkins-ephemeral --param MEMORY_LIMIT=2Gi --param DISABLE_ADMINISTRATIVE_MONITORS=true --param ENABLE_OAUTH=true 
+    $ oc new-app jenkins-ephemeral --param MEMORY_LIMIT=2Gi --param DISABLE_ADMINISTRATIVE_MONITORS=true --param ENABLE_OAUTH=true
     $ oc set resources dc jenkins --limits=cpu=2 --requests=cpu=1,memory=2Gi
 
   1.4. Comprobar como despliega, cuando el pod del jenkins (en este caso **jenkins-2-2bpfg**) este **Ready** salir del watch con **Ctrl+C**:
@@ -40,17 +40,17 @@
 
 ### 2. Preparar el entorno de Desarrollo
 
-  2.1. Crear un proyecto para la aplicacion que se va a desplegar:
+  2.1. Crear un proyecto para la aplicacion que se va a desplegar en desarrollo:
 
-    $ oc new-project $GUID-tasks --display-name="My Tasks Project"
+    $ oc new-project $GUID-tasks-dev --display-name="My Tasks Project DEV"
 
-  2.2. Desplegar la aplicacion para la que crearemos un pipeline en Jenkins. Este comando creara todos los recursos necesarios para la aplicacion, build configuration, image stream, deployment config, y service:
+  2.2. Desplegar la aplicacion para la que crearemos un pipeline en Jenkins. Este comando creara todos los recursos necesarios para la aplicacion, build configuration, imagestream, deployment config, y service:
 
-    $ oc new-app jboss-eap71-openshift:1.4~https://github.com/redhat-gpte-devopsautomation/openshift-tasks --as-deployment-config=true
+    $ oc new-app php~https://github.com/lissettegar/openshiftex.git --as-deployment-config=true
 
   2.3. Comprobar el progreso del build:
 
-    $ oc logs -f openshift-tasks-1-build
+    $ oc logs -f openshiftex-1-build
 
   2.4. Una vez finalize el build comprobar todos los recursos que se han creado en el proyecto:
 
@@ -58,15 +58,15 @@
 
   2.5. A continuacion crear un route para el acceso a la aplicacion:
 
-    $ oc expose svc openshift-tasks
+    $ oc expose svc openshiftex
 
   2.6. Deshabilitar el trigger automatico para nuestro deploymentconfig:
 
-    $ oc set triggers dc openshift-tasks --manual
+    $ oc set triggers dc openshiftex --manual
 
   2.7. Dar los permisos a correctos a la serviceaccount de jenkins para poder hacer build y deploys (esto se hace porque el jenkins y la app estan en protectos diferentes):
 
-    $ oc policy add-role-to-user edit system:serviceaccount:$GUID-cicd:jenkins -n $GUID-tasks
+    $ oc policy add-role-to-user edit system:serviceaccount:$GUID-cicd:jenkins -n $GUID-tasks-dev
 
 ## 3. Crear un pipeline simple
 
@@ -76,33 +76,31 @@
 
    3.3. Poner un nombre al Pipeline, por ejemplo Task, seleccionar **Pipeline** en el tipo de Job y click en **OK**.
 
-   3.4. En la siguiente pantalla, seccion script, copiar el pipeline del ejemplo:
+   3.4. En la siguiente pantalla, seccion script, copiar el siguiente pipeline. Cambiar en el pipeline donde pone **guid** por el valor del **GUID** que se este usando (esta definido 3 veces en el pipeline **guid-tasks**):
 
     node {
       stage('Build Tasks') {
         openshift.withCluster() {
-          openshift.withProject("guid-tasks") {
-            openshift.selector("bc", "openshift-tasks").startBuild("--wait=true")
+          openshift.withProject("guid-tasks-dev") {
+            openshift.selector("bc", "openshiftex").startBuild("--wait=true")
           }
         }
       }
       stage('Tag Image') {
         openshift.withCluster() {
-          openshift.withProject("guid-tasks") {
-            openshift.tag("openshift-tasks:latest", "openshift-tasks:${BUILD_NUMBER}")
+          openshift.withProject("guid-tasks-dev") {
+            openshift.tag("openshiftex:latest", "openshiftex:${BUILD_NUMBER}")
           }
         }
       }
       stage('Deploy new image') {
         openshift.withCluster() {
-          openshift.withProject("guid-tasks") {
-            openshift.selector("dc", "openshift-tasks").rollout().latest();
+          openshift.withProject("guid-tasks-dev") {
+            openshift.selector("dc", "openshiftex").rollout().latest();
           }
         }
       }
     }  
-
-  3.5. Cambiar en el pipeline donde pone **guid** por el valor del **GUID** que se este usando (esta definido 3 veces en el pipeline **guid-tasks**).
 
   3.6. Click **Guargar** para guardar el pipeline.
 
@@ -116,8 +114,91 @@
 
   3.9. Una vez termine el pipeline obtener la URL de la aplicacion y comprabar que se accede correctamente:
 
-    $ oc get route openshift-tasks -n $GUID-tasks -o jsonpath='{.spec.host}{"\n"}'
+    $ oc get route openshiftex -n $GUID-tasks-dev -o jsonpath='{.spec.host}{"\n"}'
+
+## 4. Desplegar en Producción
+
+  4.1. Crear un proyecto para la aplicacion que se va a desplegar en desarrollo:
+
+    $ oc new-project $GUID-tasks-prod --display-name="My Tasks Project PROD"
+
+  4.2. Desplegar la aplicacion en el proyecto de producción:
+
+    $ oc new-app php~https://github.com/lissettegar/openshiftex.git --as-deployment-config=true
+
+  4.3. Comprobar el progreso del build:
+
+    $ oc logs -f openshiftex-1-build
+
+  4.4. Una vez finalize el build comprobar todos los recursos que se han creado en el proyecto:
+
+    $ oc get all
+
+  4.5. A continuacion crear un route para el acceso a la aplicacion:
+
+    $ oc expose svc openshiftex
+
+  4.6. Deshabilitar el trigger automatico para nuestro deploymentconfig:
+
+    $ oc set triggers dc openshiftex --manual
+
+  4.7. Dar los permisos a correctos a la serviceaccount de jenkins para poder hacer build y deploys (esto se hace porque el jenkins y la app estan en protectos diferentes):
+
+    $ oc policy add-role-to-user edit system:serviceaccount:$GUID-cicd:jenkins -n $GUID-tasks-prod
+
+## 5. Modificar el pipeline para desplegar tambien en producción:
+
+  5.1. Editar el pipeline de Jenkins para que quede como el siguiente (cambiar todos los **guid** que aparecen):
+
+    node {
+      stage('Build Tasks') {
+        openshift.withCluster() {
+          openshift.withProject("guid-tasks-dev") {
+            openshift.selector("bc", "openshiftex").startBuild("--wait=true")
+          }
+        }
+      }
+      stage('Tag Image') {
+        openshift.withCluster() {
+          openshift.withProject("guid-tasks-dev") {
+            openshift.tag("openshiftex:latest", "openshiftex:${BUILD_NUMBER}")
+          }
+        }
+      }
+      stage('Deploy new image in DEV') {
+        openshift.withCluster() {
+          openshift.withProject("guid-tasks-dev") {
+            openshift.selector("dc", "openshiftex").rollout().latest();
+          }
+        }
+      }
+      stage('Promote to PRODUCTION?') {
+        input message: "Promote new code?", ok: "Promote"
+      }
+      stage('Deploy in PROD') {
+    	   openshift.withCluster() {
+    	     openshift.withProject("guid-tasks-prod") {
+           openshift.tag("lgp-tasks-dev/openshiftex:latest", "lgp-tasks-prod/openshiftex:latest")	  
+   		      openshift.selector("dc", "openshiftex").rollout().latest();
+          }
+        }
+      }
+    }
+
+  5.2. Click **Guargar** para guardar el pipeline.
+
+  5.3. En la pagina del Job, seleccionar **Construir ahora**.
+
+  5.4. Ver el progreso del pipeline de cualquiera de las siguientes formas:
+
+  * Desde la pantalla del Job se ve el progreso de los Stages.
+  * Haciendo click en el numero del build (por ejemplo **#2**) y luego opcion **Console Output**.
+  * Desde la pantalla del job, hacer click en **Open Ocean Blue**.
+
+  5.5. Una vez termine el pipeline obtener la URL de la aplicacion y comprabar que se accede correctamente:
+
+    $ oc get route openshiftex -n $GUID-tasks-prod -o jsonpath='{.spec.host}{"\n"}'
 
 ## 4. Limpar el entorno
 
-    $ oc delete project $GUID-tasks $GUID-cicd
+    $ oc delete project $GUID-tasks-dev $GUID-cicd $GUID-tasks-prod
