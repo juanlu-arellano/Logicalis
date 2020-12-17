@@ -178,7 +178,7 @@
       stage('Deploy in PROD') {
     	   openshift.withCluster() {
     	     openshift.withProject("guid-tasks-prod") {
-           openshift.tag("lgp-tasks-dev/openshiftex:latest", "lgp-tasks-prod/openshiftex:latest")	  
+           openshift.tag("guid-tasks-dev/openshiftex:latest", "guid-tasks-prod/openshiftex:latest")	  
    		      openshift.selector("dc", "openshiftex").rollout().latest();
           }
         }
