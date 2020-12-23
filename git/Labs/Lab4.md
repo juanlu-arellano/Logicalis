@@ -2,9 +2,9 @@
 
 ### Historial de confirmaciones
 
-* Prerequisito: Haber terminado los labs 1 y 2. No es indispensable pero si se han terminado los resultados de los comandos serán los mismos que en los ejemplos.
+* Prerequisito: Haber terminado los labs 1 y 2. No es indispensable pero si se han terminado los resultados de los comandos serán similares a los ejemplos.
 
-1. En el mismo repositorio de los labs 1 y 2, añadir un fichero al repositorio:
+1. En el mismo repositorio de los labs 1 y 2 (**formacion-git**), añadir un fichero al repositorio:
 
        $ echo 'version: 1.0' > version
 
@@ -21,7 +21,7 @@
 
        $ git add .
        $ git commit -m "version 1.0"
-       [master eec021c] version 1.0
+       [master aaae799] version 1.0
         1 file changed, 1 insertion(+)
         create mode 100644 version
 
@@ -72,36 +72,36 @@
 
        $ git add .
        $ git commit -m "version 2.0"
-       [master 4f73fa5] version 2.0
-       2 files changed, 2 insertions(+), 1 deletion(-)
+       [master b986b73] version 2.0
+        2 files changed, 2 insertions(+), 1 deletion(-)
 
 3. Consultar el historial de confirmaciones:
 
        $ git log
-       commit 4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master)
+       commit b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master)
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 10:39:20 2020 +0100
+       Date:   Wed Dec 23 11:15:37 2020 +0100
 
            version 2.0
 
-       commit eec021cc70adec40e44c2cdead96d3efa2100606
+       commit aaae799b5936836415e13d7e41117afe02cb83e9
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 10:36:34 2020 +0100
+       Date:   Wed Dec 23 11:12:38 2020 +0100
 
            version 1.0
 
-       commit a4522872d7c80eef8e17b3d12baa81ba53b81008
+       commit 3a1666d9149d5b135980c2ab4cdb833a973a4750
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 09:23:31 2020 +0100
+       Date:   Wed Dec 23 10:09:51 2020 +0100
 
            commit hello.txt and cambios.txt
 
 4. Consultar el historial de confirmaciones mostrando los cambios de cada una:
 
        $ git log -p
-       commit 4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master)
+       commit b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master)
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 10:39:20 2020 +0100
+       Date:   Wed Dec 23 11:15:37 2020 +0100
 
            version 2.0
 
@@ -120,9 +120,9 @@
        -version: 1.0
        +version: 2.0
 
-       commit eec021cc70adec40e44c2cdead96d3efa2100606
+       commit aaae799b5936836415e13d7e41117afe02cb83e9
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 10:36:34 2020 +0100
+       Date:   Wed Dec 23 11:12:38 2020 +0100
 
            version 1.0
 
@@ -134,9 +134,9 @@
        @@ -0,0 +1 @@
        +version: 1.0
 
-       commit a4522872d7c80eef8e17b3d12baa81ba53b81008
+       commit 3a1666d9149d5b135980c2ab4cdb833a973a4750
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 09:23:31 2020 +0100
+       Date:   Wed Dec 23 10:09:51 2020 +0100
 
            commit hello.txt and cambios.txt
 
@@ -159,9 +159,9 @@
 5. Consultar unicamente los últimos 2 commits:
 
        $ git log -p -2
-       commit 4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master)
+       commit b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master)
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 10:39:20 2020 +0100
+       Date:   Wed Dec 23 11:15:37 2020 +0100
 
            version 2.0
 
@@ -180,9 +180,9 @@
        -version: 1.0
        +version: 2.0
 
-       commit eec021cc70adec40e44c2cdead96d3efa2100606
+       commit aaae799b5936836415e13d7e41117afe02cb83e9
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 10:36:34 2020 +0100
+       Date:   Wed Dec 23 11:12:38 2020 +0100
 
            version 1.0
 
@@ -229,54 +229,53 @@
 7. Mostrando resumen de estadisticas:
 
        $ git log --shortstat
-       commit 4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master)
+       commit b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master)
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 10:39:20 2020 +0100
+       Date:   Wed Dec 23 11:15:37 2020 +0100
 
            version 2.0
 
         2 files changed, 2 insertions(+), 1 deletion(-)
 
-       commit eec021cc70adec40e44c2cdead96d3efa2100606
+       commit aaae799b5936836415e13d7e41117afe02cb83e9
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 10:36:34 2020 +0100
+       Date:   Wed Dec 23 11:12:38 2020 +0100
 
            version 1.0
 
         1 file changed, 1 insertion(+)
 
-       commit a4522872d7c80eef8e17b3d12baa81ba53b81008
+       commit 3a1666d9149d5b135980c2ab4cdb833a973a4750
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 09:23:31 2020 +0100
+       Date:   Wed Dec 23 10:09:51 2020 +0100
 
            commit hello.txt and cambios.txt
 
         2 files changed, 3 insertions(+)
 
-
  8. Mostrando sólo los nombres de los ficheros:
 
         $ git log --name-only
-        commit 4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master)
+        commit b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master)
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   Wed Nov 18 10:39:20 2020 +0100
+        Date:   Wed Dec 23 11:15:37 2020 +0100
 
             version 2.0
 
         cambios.txt
         version
 
-        commit eec021cc70adec40e44c2cdead96d3efa2100606
+        commit aaae799b5936836415e13d7e41117afe02cb83e9
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   Wed Nov 18 10:36:34 2020 +0100
+        Date:   Wed Dec 23 11:12:38 2020 +0100
 
             version 1.0
 
         version
 
-        commit a4522872d7c80eef8e17b3d12baa81ba53b81008
+        commit 3a1666d9149d5b135980c2ab4cdb833a973a4750
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   Wed Nov 18 09:23:31 2020 +0100
+        Date:   Wed Dec 23 10:09:51 2020 +0100
 
             commit hello.txt and cambios.txt
 
@@ -286,26 +285,26 @@
 9. Mostrando los ficheros y si fueron añadidos, modificados, etc:
 
        $ git log --name-status
-       commit 4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master)
+       commit b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master)
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 10:39:20 2020 +0100
+       Date:   Wed Dec 23 11:15:37 2020 +0100
 
            version 2.0
 
        M       cambios.txt
        M       version
 
-       commit eec021cc70adec40e44c2cdead96d3efa2100606
+       commit aaae799b5936836415e13d7e41117afe02cb83e9
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 10:36:34 2020 +0100
+       Date:   Wed Dec 23 11:12:38 2020 +0100
 
            version 1.0
 
        A       version
 
-       commit a4522872d7c80eef8e17b3d12baa81ba53b81008
+       commit 3a1666d9149d5b135980c2ab4cdb833a973a4750
        Author: Lissette García <lissette.garcia@es.logicalis.com>
-       Date:   Wed Nov 18 09:23:31 2020 +0100
+       Date:   Wed Dec 23 10:09:51 2020 +0100
 
            commit hello.txt and cambios.txt
 
@@ -315,131 +314,130 @@
 10. Mostrando el hash del commit de forma abreviada:
 
         $ git log --abbrev-commit
-        commit 4f73fa5 (HEAD -> master)
+        commit b986b73 (HEAD -> master)
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   Wed Nov 18 10:39:20 2020 +0100
+        Date:   Wed Dec 23 11:15:37 2020 +0100
 
             version 2.0
 
-        commit eec021c
+        commit aaae799
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   Wed Nov 18 10:36:34 2020 +0100
+        Date:   Wed Dec 23 11:12:38 2020 +0100
 
             version 1.0
 
-        commit a452287
+        commit 3a1666d
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   Wed Nov 18 09:23:31 2020 +0100
+        Date:   Wed Dec 23 10:09:51 2020 +0100
 
             commit hello.txt and cambios.txt
 
 11. Mostrandolos con fechas relativas:
 
         $ git log --relative-date
-        commit 4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master)
+        commit b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master)
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   22 minutes ago
+        Date:   5 minutes ago
 
             version 2.0
 
-        commit eec021cc70adec40e44c2cdead96d3efa2100606
+        commit aaae799b5936836415e13d7e41117afe02cb83e9
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   25 minutes ago
+        Date:   8 minutes ago
 
             version 1.0
 
-        commit a4522872d7c80eef8e17b3d12baa81ba53b81008
+        commit 3a1666d9149d5b135980c2ab4cdb833a973a4750
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   2 hours ago
+        Date:   70 minutes ago
 
             commit hello.txt and cambios.txt
 
 12. Mostrandolos con fechas relativas y commit abreviado:
 
         $ git log --relative-date --abbrev-commit
-        commit 4f73fa5 (HEAD -> master)
+        commit b986b73 (HEAD -> master)
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   23 minutes ago
+        Date:   5 minutes ago
 
             version 2.0
 
-        commit eec021c
+        commit aaae799
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   25 minutes ago
+        Date:   8 minutes ago
 
             version 1.0
 
-        commit a452287
+        commit 3a1666d
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   2 hours ago
+        Date:   71 minutes ago
 
             commit hello.txt and cambios.txt
 
 13. Mostrando grafico ASCII:
 
-        $ git log --graph
-        * commit 4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master)
+        * commit b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master)
         | Author: Lissette García <lissette.garcia@es.logicalis.com>
-        | Date:   Wed Nov 18 10:39:20 2020 +0100
+        | Date:   Wed Dec 23 11:15:37 2020 +0100
         |
         |     version 2.0
         |
-        * commit eec021cc70adec40e44c2cdead96d3efa2100606
+        * commit aaae799b5936836415e13d7e41117afe02cb83e9
         | Author: Lissette García <lissette.garcia@es.logicalis.com>
-        | Date:   Wed Nov 18 10:36:34 2020 +0100
+        | Date:   Wed Dec 23 11:12:38 2020 +0100
         |
         |     version 1.0
         |
-        * commit a4522872d7c80eef8e17b3d12baa81ba53b81008
+        * commit 3a1666d9149d5b135980c2ab4cdb833a973a4750
           Author: Lissette García <lissette.garcia@es.logicalis.com>
-          Date:   Wed Nov 18 09:23:31 2020 +0100
+          Date:   Wed Dec 23 10:09:51 2020 +0100
 
               commit hello.txt and cambios.txt
 
 14. Mostrandolos en formato alternativo:
 
         $ git log --pretty=fuller
-        commit 4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master)
+        commit b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master)
         Author:     Lissette García <lissette.garcia@es.logicalis.com>
-        AuthorDate: Wed Nov 18 10:39:20 2020 +0100
+        AuthorDate: Wed Dec 23 11:15:37 2020 +0100
         Commit:     Lissette García <lissette.garcia@es.logicalis.com>
-        CommitDate: Wed Nov 18 10:39:20 2020 +0100
+        CommitDate: Wed Dec 23 11:15:37 2020 +0100
 
             version 2.0
 
-        commit eec021cc70adec40e44c2cdead96d3efa2100606
+        commit aaae799b5936836415e13d7e41117afe02cb83e9
         Author:     Lissette García <lissette.garcia@es.logicalis.com>
-        AuthorDate: Wed Nov 18 10:36:34 2020 +0100
+        AuthorDate: Wed Dec 23 11:12:38 2020 +0100
         Commit:     Lissette García <lissette.garcia@es.logicalis.com>
-        CommitDate: Wed Nov 18 10:36:34 2020 +0100
+        CommitDate: Wed Dec 23 11:12:38 2020 +0100
 
             version 1.0
 
-        commit a4522872d7c80eef8e17b3d12baa81ba53b81008
+        commit 3a1666d9149d5b135980c2ab4cdb833a973a4750
         Author:     Lissette García <lissette.garcia@es.logicalis.com>
-        AuthorDate: Wed Nov 18 09:23:31 2020 +0100
+        AuthorDate: Wed Dec 23 10:09:51 2020 +0100
         Commit:     Lissette García <lissette.garcia@es.logicalis.com>
-        CommitDate: Wed Nov 18 09:30:59 2020 +0100
+        CommitDate: Wed Dec 23 10:46:54 2020 +0100
 
             commit hello.txt and cambios.txt
 
         $ git log --pretty=oneline
-        4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master) version 2.0
-        eec021cc70adec40e44c2cdead96d3efa2100606 version 1.0
-        a4522872d7c80eef8e17b3d12baa81ba53b81008 commit hello.txt and cambios.txt
+        b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master) version 2.0
+        aaae799b5936836415e13d7e41117afe02cb83e9 version 1.0
+        3a1666d9149d5b135980c2ab4cdb833a973a4750 commit hello.txt and cambios.txt
 
         $ git log --pretty=short
-        commit 4f73fa5f9d9350f5bf8b3747967f28b173f18f0b (HEAD -> master)
+        commit b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master)
         Author: Lissette García <lissette.garcia@es.logicalis.com>
 
             version 2.0
 
-        commit eec021cc70adec40e44c2cdead96d3efa2100606
+        commit aaae799b5936836415e13d7e41117afe02cb83e9
         Author: Lissette García <lissette.garcia@es.logicalis.com>
 
             version 1.0
 
-        commit a4522872d7c80eef8e17b3d12baa81ba53b81008
+        commit 3a1666d9149d5b135980c2ab4cdb833a973a4750
         Author: Lissette García <lissette.garcia@es.logicalis.com>
 
             commit hello.txt and cambios.txt
@@ -447,18 +445,18 @@
 15. Mostrandolos en formatos personalizados:
 
         $ git log --pretty=format:"%h %s" --graph
-        * 4f73fa5 version 2.0
-        * eec021c version 1.0
-        * a452287 commit hello.txt and cambios.txt
+        * b986b73 version 2.0
+        * aaae799 version 1.0
+        * 3a1666d commit hello.txt and cambios.txt
 
         $ git log --pretty=format:"%h - %an, %ar : %s"
-        4f73fa5 - Lissette García, 29 minutes ago : version 2.0
-        eec021c - Lissette García, 32 minutes ago : version 1.0
-        a452287 - Lissette García, 2 hours ago : commit hello.txt and cambios.txt
+        b986b73 - Lissette García, 8 minutes ago : version 2.0
+        aaae799 - Lissette García, 11 minutes ago : version 1.0
+        3a1666d - Lissette García, 74 minutes ago : commit hello.txt and cambios.txt
 
         $ git log -Sversion
-        commit eec021cc70adec40e44c2cdead96d3efa2100606
+        commit aaae799b5936836415e13d7e41117afe02cb83e9
         Author: Lissette García <lissette.garcia@es.logicalis.com>
-        Date:   Wed Nov 18 10:36:34 2020 +0100
+        Date:   Wed Dec 23 11:12:38 2020 +0100
 
             version 1.0

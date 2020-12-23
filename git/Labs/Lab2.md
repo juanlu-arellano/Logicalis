@@ -20,7 +20,7 @@
 
        nothing added to commit but untracked files present (use "git add" to track)
 
-3. Este fichero que acabamos de crear no fue incluido en el commit anterior por error, así que vamos a incluirlo ahora usando el comando git commit --amend:
+3. Este fichero que acabamos de crear no fue incluido en el commit anterior por "error", así que vamos a incluirlo ahora usando el comando git commit --amend:
 
        $ git add cambios.txt
        $ git status
@@ -32,7 +32,7 @@
 
 4. Podemos comprobar que se ha creado una entrada en el directorio objects para el nuevo fichero que acabamos de añadir:
 
-        $ tree
+        $ tree .git
         ...
         ├── index
         ├── info
@@ -51,8 +51,8 @@
         │   │   └── 4aab98519e195b37ab749d3f76d7cedca6858d
         │   ├── 8d
         │   │   └── 0e41234f24b6da002d962a26c2495ea16a425f
-        │   ├── f5
-        │   │   └── 4869598dea474ea9fc8a41bd7cdd016d3e7de9
+        │   ├── 9f
+        │   │   └── b6511a8cceff613bd047d9ed05c0a4495b3b49
         │   ├── info
         │   └── pack
         └── refs
@@ -60,7 +60,7 @@
             │   └── master
             └── tags
 
-5. Ahora ejecutaremos el commit y como no hemos puesto la opcion `-m` para indicar un mensaje, se abrirá el editor configurado para git. Añadir un mensaje para el commit y salir del editor guardando los cambios `:wq!`:
+5. Ahora ejecutaremos el commit y como no hemos puesto la opcion `-m` para indicar un mensaje, se abrirá el editor configurado para git. Añadir un mensaje para el commit (por ejemplo "commit hello.txt and cambios.txt") y salir del editor guardando los cambios `:wq!`:
 
        $ git commit --amend
 
@@ -81,8 +81,8 @@
        #
        :wq!
 
-       [master a452287] commit hello.txt and cambios.txt
-        Date: Wed Nov 18 09:23:31 2020 +0100
+       [master 3a1666d] commit hello.txt and cambios.txt
+        Date: Wed Dec 23 10:09:51 2020 +0100
         2 files changed, 3 insertions(+)
         create mode 100644 cambios.txt
         create mode 100644 hello.txt
@@ -93,7 +93,7 @@
 
 6. Ahora podemos ver que se ha registrado el nuevo commit:
 
-       $ tree
+       $ tree .git
        ...
        ├── index
        ├── info
@@ -108,16 +108,16 @@
        │   │   └── 5f71514a6b3bce04c7ab07930b3d017bbe67e6
        │   ├── 35
        │   │   └── d4b75f539702e8c15fc1c985e61cca603a2a3b
+       │   ├── 3a
+       │   │   └── 1666d9149d5b135980c2ab4cdb833a973a4750
        │   ├── 6e
        │   │   └── 9058368966b7b6797b108919f5517d58e98437
        │   ├── 78
        │   │   └── 4aab98519e195b37ab749d3f76d7cedca6858d
        │   ├── 8d
        │   │   └── 0e41234f24b6da002d962a26c2495ea16a425f
-       │   ├── a4
-       │   │   └── 522872d7c80eef8e17b3d12baa81ba53b81008
-       │   ├── f5
-       │   │   └── 4869598dea474ea9fc8a41bd7cdd016d3e7de9
+       │   ├── 9f
+       │   │   └── b6511a8cceff613bd047d9ed05c0a4495b3b49
        │   ├── info
        │   └── pack
        └── refs
@@ -125,21 +125,21 @@
            │   └── master
            └── tags
 
-7. Si lo examinamos (hay que buscar cual es el fichero del commit con el comando `git cat-file -t <id>`):
+7. Si examinamos el nuevo commit (hay que buscar cual es el fichero del commit con el comando `git cat-file -t <id>`):
 
-       $ git cat-file -t a4522872d7c80eef8e17b3d12baa81ba53b81008
+       $ git cat-file -t 3a1666d9149d5b135980c2ab4cdb833a973a4750
        commit
-       $ git cat-file commit a4522872d7c80eef8e17b3d12baa81ba53b81008
+       $ git cat-file commit 3a1666d9149d5b135980c2ab4cdb833a973a4750
        tree 075f71514a6b3bce04c7ab07930b3d017bbe67e6
-       author Lissette García <lissette.garcia@es.logicalis.com> 1605687811 +0100
-       committer Lissette García <lissette.garcia@es.logicalis.com> 1605688259 +0100
+       author Lissette García <lissette.garcia@es.logicalis.com> 1608714591 +0100
+       committer Lissette García <lissette.garcia@es.logicalis.com> 1608716814 +0100
 
        commit hello.txt and cambios.txt
 
 8. Tambien podemos confirmar que el head apunta al nuevo commit:
 
        $ cat .git/refs/heads/master
-       a4522872d7c80eef8e17b3d12baa81ba53b81008
+       3a1666d9149d5b135980c2ab4cdb833a973a4750
 
 9. Modificamos el fichero cambios.txt:
 

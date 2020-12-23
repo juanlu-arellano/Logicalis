@@ -179,6 +179,7 @@
     	   openshift.withCluster() {
     	     openshift.withProject("guid-tasks-prod") {
            openshift.tag("guid-tasks-dev/openshiftex:latest", "guid-tasks-prod/openshiftex:latest")	  
+           openshift.set("image", "dc/openshiftex", "openshiftex=image-registry.openshift-image-registry.svc:5000/guid-tasks-prod/openshiftex:latest")
    		      openshift.selector("dc", "openshiftex").rollout().latest();
           }
         }

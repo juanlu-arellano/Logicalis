@@ -70,6 +70,7 @@
 7. Crear un fichero dentro del directorio del repo y comprobar con git status que el fichero aparece como `untracked`:
 
        $ echo 'hello git' >> hello.txt
+
        $ git status
        On branch master
 
@@ -101,9 +102,10 @@
            ├── heads
            └── tags
 
-9. Ahora ejecutamos `git add.` para añadir el archivo. Los archivos agregados se clasifican como "Changes to be committed":
+9. Ahora ejecutamos `git add.` para añadir el archivo. El archivo agregado aparecerá como pendiente de confirmación, "Changes to be committed":
 
        $ git add .
+
        $ git status
        On branch master
 
@@ -136,17 +138,19 @@
             ├── heads
             └── tags
 
-11. Los ficheros de snapshot se guardan en la carpeta `objetcts` y cada fichero tiene su propia identificación calculada por git. Las primeras 2 letras se convierten en nombre de carpeta y el resto en nombre de archivo.
-Primero hay que verificar el tipo de archivo pasando como parámetro una combinación del nombre de la carpeta (8d) y el nombre del archivo (0e412 ..):
+11. Los ficheros de snapshot se guardan en la carpeta `objetcts` y cada fichero tiene su propia identificación calculada por git. Las primeras 2 letras de este ID sera el nombre de carpeta y el resto el nombre del archivo.
+Vamos a ver el contenido del snapshot directamente en el objeto de git. Primero hay que verificar el tipo de archivo, pasando como parámetro una combinación del nombre de la carpeta (8d) y el nombre del archivo (0e412 ..):
 
         $ git cat-file -t 8d0e41234f24b6da002d962a26c2495ea16a425f
         blob
+
         $ git cat-file blob 8d0e41234f24b6da002d962a26c2495ea16a425f
         hello git
 
 12. A continuación antes de hacer el commit del fichero, vamos a modificarlo:
 
         $ echo 'bye git' >> hello.txt
+
         $ git status
         On branch master
 
@@ -217,6 +221,7 @@ Primero hay que verificar el tipo de archivo pasando como parámetro una combina
 
         $ git cat-file -t 784aab98519e195b37ab749d3f76d7cedca6858d
         blob
+
         $ git cat-file blob 784aab98519e195b37ab749d3f76d7cedca6858d
         hello git
         bye git
@@ -224,14 +229,15 @@ Primero hay que verificar el tipo de archivo pasando como parámetro una combina
 17. En este punto haremos un commit:
 
         $ git commit -m "commit hello.txt"
-        [master (root-commit) 79d3616] commit hello.txt
-         1 file changed, 2 insertions(+)
-         create mode 100644 hello.txt
+        [master (root-commit) 9fb6511] commit hello.txt
+        1 file changed, 2 insertions(+)
+        create mode 100644 hello.txt
+
         $ git status
         On branch master
         nothing to commit, working tree clean
 
-19. Podemos ver como se crean varios ficheros en la carpeta `.git`:
+19. Después del commit, podemos ver como se crean varios ficheros en la carpeta `.git`:
 
          $ tree .git
          .git
@@ -257,8 +263,8 @@ Primero hay que verificar el tipo de archivo pasando como parámetro una combina
          │   │   └── 4aab98519e195b37ab749d3f76d7cedca6858d
          │   ├── 8d
          │   │   └── 0e41234f24b6da002d962a26c2495ea16a425f
-         │   ├── f5
-         │   │   └── 4869598dea474ea9fc8a41bd7cdd016d3e7de9
+         │   ├── 9f
+         │   │   └── b6511a8cceff613bd047d9ed05c0a4495b3b49
          │   ├── info
          │   └── pack
          └── refs
@@ -275,12 +281,12 @@ Primero hay que verificar el tipo de archivo pasando como parámetro una combina
 
 20. Ahora vamos a examinar el fichero del `commit`. Hay dos nuevos archivos creados, así que uno de ellos es del `commit`. Para identificar cual es hay que ejecutar `git cat-file -t <id>` (recordad que el id se forma juntando el nombre de la carpeta y el nombre del fichero), por ejemplo:
 
-        $ git cat-file -t f54869598dea474ea9fc8a41bd7cdd016d3e7de9
+        $ git cat-file -t 9fb6511a8cceff613bd047d9ed05c0a4495b3b49
         commit
-        $ git cat-file commit f54869598dea474ea9fc8a41bd7cdd016d3e7de9
+        $ git cat-file commit 9fb6511a8cceff613bd047d9ed05c0a4495b3b49
         tree 35d4b75f539702e8c15fc1c985e61cca603a2a3b
-        author Lissette García <lissette.garcia@es.logicalis.com> 1605687811 +0100
-        committer Lissette García <lissette.garcia@es.logicalis.com> 1605687811 +0100
+        author Lissette García <lissette.garcia@es.logicalis.com> 1608714591 +0100
+        committer Lissette García <lissette.garcia@es.logicalis.com> 1608714591 +0100
 
         commit hello.txt
 
@@ -288,14 +294,14 @@ Primero hay que verificar el tipo de archivo pasando como parámetro una combina
 
    Contiene el commit id correspondiente al HEAD:
         $ cat .git/refs/heads/master
-        f54869598dea474ea9fc8a41bd7cdd016d3e7de9
+        9fb6511a8cceff613bd047d9ed05c0a4495b3b49
 
    Contienen la misma información, "el commitid correspondiente al HEAD":
         $ cat .git/logs/HEAD
-        0000000000000000000000000000000000000000 f54869598dea474ea9fc8a41bd7cdd016d3e7de9 Lissette García <lissette.garcia@es.logicalis.com> 1605687811 +0100	commit (initial): commit hello.txt
+        0000000000000000000000000000000000000000 9fb6511a8cceff613bd047d9ed05c0a4495b3b49 Lissette García <lissette.garcia@es.logicalis.com> 1608714591 +0100	commit (initial): commit hello.txt
 
         $ cat .git/logs/refs/heads/master
-        0000000000000000000000000000000000000000 f54869598dea474ea9fc8a41bd7cdd016d3e7de9 Lissette García <lissette.garcia@es.logicalis.com> 1605687811 +0100	commit (initial): commit hello.txt
+        0000000000000000000000000000000000000000 9fb6511a8cceff613bd047d9ed05c0a4495b3b49 Lissette García <lissette.garcia@es.logicalis.com> 1608714591 +0100	commit (initial): commit hello.txt
 
     Contienen el mensaje del commit:
         $ cat .git/COMMIT_EDITMSG

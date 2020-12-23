@@ -2,7 +2,7 @@
 
 ### Ignorar ficheros
 
-1. Crear un nuevo repositorio:
+1. Crear un nuevo repositorio en vuestro directorio de trabajo (aseguraros de no estar dentro de un repo):
 
        $ mkdir repo-ignore
        $ cd repo-ignore
@@ -29,7 +29,7 @@
 
        nothing added to commit but untracked files present (use "git add" to track)
 
-3. Vamos a indicar a Git que ignore determinados ficheros creando un archivo en el directorio raíz de nuestro proyecto llamado .gitignore:
+3. Vamos a indicar a Git que ignore determinados ficheros creando un archivo en el directorio raíz de nuestro proyecto llamado .gitignore que contenga las lineas que se indican:
 
        $ vi .gitignore
 
@@ -38,7 +38,7 @@
 
  Estos patrones le dicen a Git que ignore cualquier archivo cuyo nombre termine en .dat y todo lo que haya en el directorio results. (Si alguno de estos archivos ya estaba siendo rastreado, Git seguirá rastreándolos.)
 
-4. Una vez que hemos creado este archivo, la salida de git status es mucho más limpia, ya no aparecen los ficheros que hemos indicado que se ignoren y aparece el fichero .gitignore que acabamos de crear:
+4. Una vez que hemos creado este archivo, la salida de git status no mostrará los ficheros que hemos indicado que se ignoren y aparece el fichero .gitignore que acabamos de crear:
 
        $ git status
        On branch master

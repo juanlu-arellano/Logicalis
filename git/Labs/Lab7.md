@@ -13,7 +13,7 @@
 
        $ git branch dev
 
-2. Volvemos a comprobar en que rama estamos y comprobamos que seguimos posicionados en la rama `master`. El comando `git branch` no nos hace saltar de rama:
+2. Volvemos a comprobar en que rama estamos y comprobamos que seguimos posicionados en la rama `master`. El comando `git branch` no nos hace saltar de rama, solo la crea:
 
        $ git branch -a
          dev
@@ -63,10 +63,10 @@
 4. El archivo .git/refs/heads/dev apunta a la confirmación actual de la rama `dev`, que se corresponde con el último commit. A este mismo commit apunta la rama `master` y el `HEAD` apunta a la rama master:
 
        $ cat .git/refs/heads/dev
-       7ca0cfa0e74f83eaa67b6ea56d38a63ad13d8d99
+       a07178fa70319546a6e4c72b4893f9fa2d8b53a9
 
        $ cat .git/refs/heads/master
-       7ca0cfa0e74f83eaa67b6ea56d38a63ad13d8d99
+       a07178fa70319546a6e4c72b4893f9fa2d8b53a9
 
        $ cat .git/HEAD
        ref: refs/heads/master
@@ -75,27 +75,27 @@
 5. Tambien podemos ver en los logs como ambas ramas apuntan a dicho commit:
 
        $ git log --oneline
-       7ca0cfa (HEAD -> master, tag: v3.0, origin/master, dev) version 3.0
-       5670211 Merge branch 'master' of https://github.com/lissettegar/prueba
-       9ae72a9 Create file from-local.md
-       fd98b47 Create from-github.md
-       4f73fa5 (tag: v2.0) version 2.0
-       eec021c (tag: v1.0) verion 1.0
-       a452287 commit hello.txt and cambios.txt
+       a07178f (HEAD -> master, tag: v3.0, origin/master, dev) version 3.0
+       3c6a550 Merge branch 'master' of https://github.com/lissettegar/formacion-git
+       0e61dcc Create from github
+       8b9e417 Create file from-local.md
+       b986b73 (tag: v2.0) version 2.0
+       aaae799 (tag: v1.0) version 1.0
+       3a1666d commit hello.txt and cambios.txt
 
 6. Si comprobamos el contenido de los ficheros `.git/logs/refs/heads/dev` y `.git/logs/refs/heads/master` podemos comprobar que cada uno contiene los logs de cada rama:
 
        $ cat .git/logs/refs/heads/dev
-       0000000000000000000000000000000000000000 7ca0cfa0e74f83eaa67b6ea56d38a63ad13d8d99 Lissette García <lissette.garcia@es.logicalis.com> 1606209248 +0100	branch: Created from master
+       0000000000000000000000000000000000000000 a07178fa70319546a6e4c72b4893f9fa2d8b53a9 Lissette García <lissette.garcia@es.logicalis.com> 1608723342 +0100	branch: Created from master
 
        $ cat .git/logs/refs/heads/master
-       0000000000000000000000000000000000000000 f54869598dea474ea9fc8a41bd7cdd016d3e7de9 Lissette García <lissette.garcia@es.logicalis.com> 1605687811 +0100	commit (initial): commit hello.txt
-       f54869598dea474ea9fc8a41bd7cdd016d3e7de9 a4522872d7c80eef8e17b3d12baa81ba53b81008 Lissette García <lissette.garcia@es.logicalis.com> 1605688259 +0100	commit (amend): commit hello.txt and cambios.txt
-       a4522872d7c80eef8e17b3d12baa81ba53b81008 eec021cc70adec40e44c2cdead96d3efa2100606 Lissette García <lissette.garcia@es.logicalis.com> 1605692194 +0100	commit: verion 1.0
-       eec021cc70adec40e44c2cdead96d3efa2100606 4f73fa5f9d9350f5bf8b3747967f28b173f18f0b Lissette García <lissette.garcia@es.logicalis.com> 1605692360 +0100	commit: version 2.0
-       4f73fa5f9d9350f5bf8b3747967f28b173f18f0b 9ae72a99243d92f38ee0c7bf34c2381206d990e2 Lissette García <lissette.garcia@es.logicalis.com> 1605711006 +0100	commit: Create file from-local.md
-       9ae72a99243d92f38ee0c7bf34c2381206d990e2 5670211fc758e8d16faab39760479d0417459962 Lissette García <lissette.garcia@es.logicalis.com> 1605711111 +0100	pull origin master: Merge made by the 'recursive' strategy.
-       5670211fc758e8d16faab39760479d0417459962 7ca0cfa0e74f83eaa67b6ea56d38a63ad13d8d99 Lissette García <lissette.garcia@es.logicalis.com> 1605782313 +0100	commit: version 3.0
+       0000000000000000000000000000000000000000 9fb6511a8cceff613bd047d9ed05c0a4495b3b49 Lissette García <lissette.garcia@es.logicalis.com> 1608714591 +0100	commit (initial): commit hello.txt
+       9fb6511a8cceff613bd047d9ed05c0a4495b3b49 3a1666d9149d5b135980c2ab4cdb833a973a4750 Lissette García <lissette.garcia@es.logicalis.com> 1608716814 +0100	commit (amend): commit hello.txt and cambios.txt
+       3a1666d9149d5b135980c2ab4cdb833a973a4750 aaae799b5936836415e13d7e41117afe02cb83e9 Lissette García <lissette.garcia@es.logicalis.com> 1608718358 +0100	commit: version 1.0
+       aaae799b5936836415e13d7e41117afe02cb83e9 b986b73fc0e81eb765d96057b46309efa8abe0c4 Lissette García <lissette.garcia@es.logicalis.com> 1608718537 +0100	commit: version 2.0
+       b986b73fc0e81eb765d96057b46309efa8abe0c4 8b9e417db52fdc711a3463a472abb177c70c9581 Lissette García <lissette.garcia@es.logicalis.com> 1608719801 +0100	commit: Create file from-local.md
+       8b9e417db52fdc711a3463a472abb177c70c9581 3c6a550790a4d09403c0603ccedf6c3e34c6749a Lissette García <lissette.garcia@es.logicalis.com> 1608720112 +0100	pull origin master: Merge made by the 'recursive' strategy.
+       3c6a550790a4d09403c0603ccedf6c3e34c6749a a07178fa70319546a6e4c72b4893f9fa2d8b53a9 Lissette García <lissette.garcia@es.logicalis.com> 1608720848 +0100	commit: version 3.0
 
 7. Esta es la situación actual graficamente. Ambas ramas apuntan al mismo commit y el `HEAD` apunta a la rama master porque aun no hemos saltado de rama:
 
@@ -144,24 +144,23 @@
         	new file:   news.txt
 
         $ git commit -m "Update news"
-        [dev 74c43a8] Update news
+        [dev 0e16342] Update news
          1 file changed, 1 insertion(+)
          create mode 100644 news.txt
 
 11. Después de este commit la situación es la siguiente:
 
          $ git log --graph --pretty --oneline
-        * 74c43a8 (HEAD -> dev) Update news
-        * 7ca0cfa (tag: v3.0, origin/master, master) version 3.0
-        *   5670211 Merge branch 'master' of https://github.com/lissettegar/prueba
-        |\  
-        | * fd98b47 Create from-github.md
-        * | 9ae72a9 Create file from-local.md
-        |/  
-        * 4f73fa5 (tag: v2.0) version 2.0
-        * eec021c (tag: v1.0) verion 1.0
-        * a452287 commit hello.txt and cambios.txt
-
+         * 0e16342 (HEAD -> dev) Update news
+         * a07178f (tag: v3.0, origin/master, master) version 3.0
+         *   3c6a550 Merge branch 'master' of https://github.com/lissettegar/formacion-git
+         |\  
+         | * 0e61dcc Create from github
+         * | 8b9e417 Create file from-local.md
+         |/  
+         * b986b73 (tag: v2.0) version 2.0
+         * aaae799 (tag: v1.0) version 1.0
+         * 3a1666d commit hello.txt and cambios.txt
 
  ![alt rama-3][rama-3]
 
@@ -171,6 +170,7 @@
 
          $ git checkout master
          Switched to branch 'master'
+         Your branch is up to date with 'origin/master'.
 
      Podemos ver que la rama actual vuelve a ser la `master`:
 
@@ -186,28 +186,28 @@
      Que no hay referencia a la rama `dev` en los logs:
 
          $ git log --graph --pretty --oneline
-         * 7ca0cfa (HEAD -> master, tag: v3.0, origin/master) version 3.0
-         *   5670211 Merge branch 'master' of https://github.com/lissettegar/prueba
+         * a07178f (HEAD -> master, tag: v3.0, origin/master) version 3.0
+         *   3c6a550 Merge branch 'master' of https://github.com/lissettegar/formacion-git
          |\  
-         | * fd98b47 Create from-github.md
-         * | 9ae72a9 Create file from-local.md
+         | * 0e61dcc Create from github
+         * | 8b9e417 Create file from-local.md
          |/  
-         * 4f73fa5 (tag: v2.0) version 2.0
-         * eec021c (tag: v1.0) verion 1.0
-         * a452287 commit hello.txt and cambios.txt
+         * b986b73 (tag: v2.0) version 2.0
+         * aaae799 (tag: v1.0) version 1.0
+         * 3a1666d commit hello.txt and cambios.txt
 
      Y que el fichero que creamos en la rama dev `news.txt` no aparece en el directorio de trabajo:
 
          $ ll
          total 32
-         drwxr-xr-x  3 lgarciap lgarciap 4096 Nov 24 12:52 ./
-         drwxr-xr-x 29 lgarciap lgarciap 4096 Nov 19 17:02 ../
-         -rw-r--r--  1 lgarciap lgarciap   28 Nov 19 12:20 cambios.txt
-         -rw-r--r--  1 lgarciap lgarciap   21 Nov 19 12:20 from-github.md
-         -rw-r--r--  1 lgarciap lgarciap   20 Nov 19 12:20 from-local.md
-         drwxr-xr-x  9 lgarciap lgarciap 4096 Nov 24 12:52 .git/
-         -rw-r--r--  1 lgarciap lgarciap   18 Nov 18 09:22 hello.txt
-         -rw-r--r--  1 lgarciap lgarciap   13 Nov 19 12:20 version
+         drwxr-xr-x 3 lgarciap lgarciap 4096 Dec 23 12:52 ./
+         drwxrwxr-x 7 lgarciap lgarciap 4096 Dec 23 10:56 ../
+         -rw-r--r-- 1 lgarciap lgarciap   28 Dec 23 12:03 cambios.txt
+         -rw-r--r-- 1 lgarciap lgarciap   21 Dec 23 12:03 from-github.md
+         -rw-r--r-- 1 lgarciap lgarciap   20 Dec 23 12:03 from-local.md
+         drwxr-xr-x 8 lgarciap lgarciap 4096 Dec 23 12:52 .git/
+         -rw-r--r-- 1 lgarciap lgarciap   18 Dec 23 10:06 hello.txt
+         -rw-r--r-- 1 lgarciap lgarciap   13 Dec 23 12:03 version
 
      De manera gráfica esta sería la situación:
 
@@ -218,8 +218,10 @@
 13. En este punto vamos a añadir un nuevo fichero en la rama master:
 
         $ echo "nuevo commit rama master" >> new-commit.txt
-        lgarciap@lgarciap-ThinkPad-T480:~/Documents/REPOS/prueba$ git status
+        $ git status
         On branch master
+        Your branch is up to date with 'origin/master'.
+
         Untracked files:
           (use "git add <file>..." to include in what will be committed)
 
@@ -230,7 +232,7 @@
         $ git add .
 
         $ git commit -m "nuevo commit rama master"
-        [master e1ccad3] nuevo commit rama master
+        [master 1e12a67] nuevo commit rama master
          1 file changed, 1 insertion(+)
          create mode 100644 new-commit.txt
 
@@ -239,28 +241,28 @@
         nothing to commit, working tree clean
 
         $ git log --graph --pretty --oneline
-        * e1ccad3 (HEAD -> master) nuevo commit rama master
-        * 7ca0cfa (tag: v3.0, origin/master) version 3.0
-        *   5670211 Merge branch 'master' of https://github.com/lissettegar/prueba
+        * 1e12a67 (HEAD -> master) nuevo commit rama master
+        * a07178f (tag: v3.0, origin/master) version 3.0
+        *   3c6a550 Merge branch 'master' of https://github.com/lissettegar/formacion-git
         |\  
-        | * fd98b47 Create from-github.md
-        * | 9ae72a9 Create file from-local.md
+        | * 0e61dcc Create from github
+        * | 8b9e417 Create file from-local.md
         |/  
-        * 4f73fa5 (tag: v2.0) version 2.0
-        * eec021c (tag: v1.0) verion 1.0
-        * a452287 commit hello.txt and cambios.txt
+        * b986b73 (tag: v2.0) version 2.0
+        * aaae799 (tag: v1.0) version 1.0
+        * 3a1666d commit hello.txt and cambios.txt
 
 14. Cual sería la situación actual?
 
  La rama `master` apunta ahora al nuevo commit:
 
         $ cat .git/refs/heads/master
-        e1ccad34ccc21fcc0f552f715927d9187dd8f0bd
+        1e12a6755a9513876d638aba7999f89ee1656f86
 
  La rama `dev` sigue apuntando a su último commit:
 
         $ cat .git/refs/heads/dev
-        74c43a83a4bf72c37db6d945d60429f24c1d08a6
+        0e163421dc15802ebc9d70fc3f70da60d5ba7dbe
 
  Y el `HEAD` continua apuntando a la rama `master`:
 
@@ -280,25 +282,25 @@
         Switched to branch 'dev'
 
         $ git log --graph --pretty --oneline
-        * 74c43a8 (HEAD -> dev) Update news
-        * 7ca0cfa (tag: v3.0, origin/master) version 3.0
-        *   5670211 Merge branch 'master' of https://github.com/lissettegar/prueba
+        * 0e16342 (HEAD -> dev) Update news
+        * a07178f (tag: v3.0, origin/master) version 3.0
+        *   3c6a550 Merge branch 'master' of https://github.com/lissettegar/formacion-git
         |\  
-        | * fd98b47 Create from-github.md
-        * | 9ae72a9 Create file from-local.md
+        | * 0e61dcc Create from github
+        * | 8b9e417 Create file from-local.md
         |/  
-        * 4f73fa5 (tag: v2.0) version 2.0
-        * eec021c (tag: v1.0) verion 1.0
-        * a452287 commit hello.txt and cambios.txt
+        * b986b73 (tag: v2.0) version 2.0
+        * aaae799 (tag: v1.0) version 1.0
+        * 3a1666d commit hello.txt and cambios.txt
 
         $ ll
         total 36
-        drwxr-xr-x  3 lgarciap lgarciap 4096 Nov 24 13:22 ./
-        drwxr-xr-x 29 lgarciap lgarciap 4096 Nov 19 17:02 ../
-        -rw-r--r--  1 lgarciap lgarciap   28 Nov 19 12:20 cambios.txt
-        -rw-r--r--  1 lgarciap lgarciap   21 Nov 19 12:20 from-github.md
-        -rw-r--r--  1 lgarciap lgarciap   20 Nov 19 12:20 from-local.md
-        drwxr-xr-x  9 lgarciap lgarciap 4096 Nov 24 13:22 .git/
-        -rw-r--r--  1 lgarciap lgarciap   18 Nov 18 09:22 hello.txt
-        -rw-r--r--  1 lgarciap lgarciap   23 Nov 24 13:22 news.txt
-        -rw-r--r--  1 lgarciap lgarciap   13 Nov 19 12:20 version
+        drwxr-xr-x 3 lgarciap lgarciap 4096 Dec 23 12:58 ./
+        drwxrwxr-x 7 lgarciap lgarciap 4096 Dec 23 10:56 ../
+        -rw-r--r-- 1 lgarciap lgarciap   28 Dec 23 12:03 cambios.txt
+        -rw-r--r-- 1 lgarciap lgarciap   21 Dec 23 12:03 from-github.md
+        -rw-r--r-- 1 lgarciap lgarciap   20 Dec 23 12:03 from-local.md
+        drwxr-xr-x 8 lgarciap lgarciap 4096 Dec 23 12:58 .git/
+        -rw-r--r-- 1 lgarciap lgarciap   18 Dec 23 10:06 hello.txt
+        -rw-r--r-- 1 lgarciap lgarciap   23 Dec 23 12:58 news.txt
+        -rw-r--r-- 1 lgarciap lgarciap   13 Dec 23 12:03 version
