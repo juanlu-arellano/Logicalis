@@ -303,10 +303,12 @@ Vamos a ver el contenido del snapshot directamente en el objeto de git. Primero 
 21. Examinemos el resto de ficheros creados:
 
    Contiene el commit id correspondiente al HEAD:
+
         $ cat .git/refs/heads/master
         9fb6511a8cceff613bd047d9ed05c0a4495b3b49
 
    Contienen la misma información, "el commitid correspondiente al HEAD":
+
         $ cat .git/logs/HEAD
         0000000000000000000000000000000000000000 9fb6511a8cceff613bd047d9ed05c0a4495b3b49 Lissette García <lissette.garcia@es.logicalis.com> 1608714591 +0100	commit (initial): commit hello.txt
 
@@ -314,5 +316,6 @@ Vamos a ver el contenido del snapshot directamente en el objeto de git. Primero 
         0000000000000000000000000000000000000000 9fb6511a8cceff613bd047d9ed05c0a4495b3b49 Lissette García <lissette.garcia@es.logicalis.com> 1608714591 +0100	commit (initial): commit hello.txt
 
     Contienen el mensaje del commit:
+    
         $ cat .git/COMMIT_EDITMSG
         commit hello.txt

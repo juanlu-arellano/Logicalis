@@ -102,20 +102,20 @@
        # Lines starting with '#' will be ignored, and an empty message aborts
        # the commit.
 
-    Añadir un commit message y guardar el fichero `wq!`
+ Añadir un commit message y guardar el fichero `wq!`
 
-      remote: Enumerating objects: 4, done.
-      remote: Counting objects: 100% (4/4), done.
-      remote: Compressing objects: 100% (2/2), done.
-      remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
-      Unpacking objects: 100% (3/3), done.
-      From https://github.com/lissettegar/formacion-git
-       * branch            master     -> FETCH_HEAD
-         b986b73..0e61dcc  master     -> origin/master
-      Merge made by the 'recursive' strategy.
-       from-github.md | 1 +
-       1 file changed, 1 insertion(+)
-       create mode 100644 from-github.md
+       remote: Enumerating objects: 4, done.
+       remote: Counting objects: 100% (4/4), done.
+       remote: Compressing objects: 100% (2/2), done.
+       remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+       Unpacking objects: 100% (3/3), done.
+       From https://github.com/lissettegar/formacion-git
+        * branch            master     -> FETCH_HEAD
+          b986b73..0e61dcc  master     -> origin/master
+       Merge made by the 'recursive' strategy.
+        from-github.md | 1 +
+        1 file changed, 1 insertion(+)
+        create mode 100644 from-github.md
 
 9. Finalmente ya tenemos en local el fichero que añadimos en remoto y ya podemos iniciar el push:
 
