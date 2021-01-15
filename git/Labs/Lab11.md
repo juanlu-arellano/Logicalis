@@ -1,5 +1,7 @@
 ### Instrucciones Laboratorio 11
 
+* Prerequisito: Haber terminado los labs anteriores.
+
 ### Cherry-Picks
 
 * Prerequisito: Haber terminado los labs anteriores.

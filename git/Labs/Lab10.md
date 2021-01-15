@@ -2,6 +2,8 @@
 
 * Prerequisito: Haber terminado los labs anteriores.
 
+## Ramificacion, Rebase
+
 1. Nos posicionamos en el repo **formacion-git** y nos movemos a la rama master. La situación de partida es la siguiente:
 
        $ cd formacion-git

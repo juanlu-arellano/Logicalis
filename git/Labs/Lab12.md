@@ -2,6 +2,8 @@
 
 ### Hooks
 
+En este laboratorio vamos a poner en práctica el uso de Hooks
+
 1. Crear un nuevo repositorio
 
        $ mkdir repo-myhooks

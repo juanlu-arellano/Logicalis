@@ -1,8 +1,10 @@
 ### Instrucciones Laboratorio 4
 
+* Prerequisito: Haber terminado los labs 1 y 2. No es indispensable pero si se han terminado los resultados de los comandos serán similares a los ejemplos.
+
 ### Historial de confirmaciones
 
-* Prerequisito: Haber terminado los labs 1 y 2. No es indispensable pero si se han terminado los resultados de los comandos serán similares a los ejemplos.
+En este laboratorio pondremos en práctica el uso del comando git log para ver el historial de confirmaciones.
 
 1. En el mismo repositorio de los labs 1 y 2 (**formacion-git**), añadir un fichero al repositorio:
 

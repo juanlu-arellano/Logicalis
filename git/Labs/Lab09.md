@@ -2,6 +2,8 @@
 
 * Prerequisito: Haber terminado los labs anteriores.
 
+## Ramificaciones, Ramans Remotas
+
 1. Desde fuera del diretorio donde tenenemos clonado el repositorio que hemos usado en los laboratorios previos, clonar el mismo repositorio de los labs anteriores pero esta vez le vamos a indicar en que directorio, por  ejemplo **formacion-git1** (Cambiar en el git clone el nombre de mi repo "https://github.com/lissettegar/formacion-git.git" por el vuestro):
 
        $ git clone https://github.com/lissettegar/formacion-git.git formacion-git1

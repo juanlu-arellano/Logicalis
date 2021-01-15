@@ -2,9 +2,19 @@
 
 ### Añadir cambios
 
-1. Instalar git:
+En este laboratorio pondremos en práctica comandos básicos de git
 
-       $ sudo apt-get install git
+1. Instalar git y tree:
+
+ En linux:
+
+       $ sudo apt-get install git git-gui gitk tree
+
+ En windows:
+
+  * Descargar el software de git desde https://gitforwindows.org/. Esto descargará un programa `git bash` para usar como consola desde la que ejecutar los comandos de git.
+
+  * Descargar el binario del comando `tree` desde http://gnuwin32.sourceforge.net/packages/tree.htm. Descomprimir el fichero y copiarlo en la carpeta que elijais. Por último añadir la ruta donde este el `tree` en la variable de entorno `PATH`.
 
 2. Configurar git:
 

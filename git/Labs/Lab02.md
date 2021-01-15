@@ -1,6 +1,10 @@
 ### Instrucciones Laboratorio 2
 
+* Prerequisito: Haber terminado los labs 1
+
 ### Deshacer cambios
+
+En este laboratorio pondremos en práctica como deshacer cambios.
 
 1. Comprobar que no hay ningún cambio pendiente del lab anterior:
 

@@ -2,6 +2,8 @@
 
 ### Ignorar ficheros
 
+En este laboratorio pondremos en práctica como ignorar ficheros de un repositorio git.
+
 1. Crear un nuevo repositorio en vuestro directorio de trabajo (aseguraros de no estar dentro de un repo):
 
        $ mkdir repo-ignore

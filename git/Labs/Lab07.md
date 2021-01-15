@@ -4,7 +4,6 @@
 
 ### Añadir una nueva rama
 
-
 1. Vamos a crear una nueva rama y ver que sucede. Lo primero que haremos será comprobar en que rama estamos y luego crearemos una rama de desarrollo.
 
        $ git branch -a

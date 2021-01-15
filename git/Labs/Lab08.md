@@ -2,6 +2,8 @@
 
 * Prerequisito: Haber terminado los labs anteriores. Usar repo **formacion-git**
 
+## Ramificaciones, Merge, Conflictos
+
 1. Saltar a la rama master:
 
        $ git checkout master
