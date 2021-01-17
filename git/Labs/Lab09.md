@@ -340,7 +340,7 @@
         To https://github.com/lissettegar/formacion-git.git
          - [deleted]         experimental
 
-        $ git branch -d experimental
+        $ git branch -D experimental
         Deleted branch experimental (was c040330).
 
 22. Borrar el repositorio clonado en  **formacion-git1**:
