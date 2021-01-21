@@ -234,7 +234,7 @@ En este laboratorio vamos a poner en práctica el uso de Hooks
 
 12. A continuación crearemos la rama **develop** y haremos push de esa rama. No nos dará error porque no es la rama master y no es fin de semana:
 
-        $ $ git checkout -b develop
+        $ git checkout -b develop
         Switched to a new branch 'develop'
 
         $ git branch

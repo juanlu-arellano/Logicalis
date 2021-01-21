@@ -378,6 +378,7 @@ En este laboratorio pondremos en práctica el uso del comando git log para ver e
 
 13. Mostrando grafico ASCII:
 
+        $ git log --graph
         * commit b986b73fc0e81eb765d96057b46309efa8abe0c4 (HEAD -> master)
         | Author: Lissette García <lissette.garcia@es.logicalis.com>
         | Date:   Wed Dec 23 11:15:37 2020 +0100
