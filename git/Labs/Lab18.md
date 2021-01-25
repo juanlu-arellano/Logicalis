@@ -52,4 +52,3 @@
 
 4. Comprobar que el runner aparece en GitLab y configurar para que corra en proyectos que no tengan Etiquetas.
 
-5. Configurar los 
