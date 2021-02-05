@@ -23,7 +23,6 @@
        # vi /etc/gitlab/gitlab.rb
        external_url "http://ha1ocp:8090"
 
-       # vi gitlab_shell_ssh_port
        gitlab_rails['gitlab_shell_ssh_port'] = 2222
 
        # gitlab-ctl reconfigure
