@@ -39,7 +39,7 @@
        USER jenkins
        RUN jenkins-plugin-cli --plugins blueocean:1.24.4
 
-       docker build -t myjenkins-blueocean:1.1 .
+       $ docker build -t myjenkins-blueocean:1.1 .
 
 4. Arrancar contenedor a partir de la imagen creada en el punto anterior:
 

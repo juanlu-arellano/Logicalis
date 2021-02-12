@@ -4,7 +4,7 @@
 
 Admin -> Settings -> Network -> Outbound Requests -> Allow requests to the local network from hooks and services
 
-1. Crear en `Gitlab` local un repositorio público que contenga el fichero `script-test.sh` con el siguiente contenido:
+1. Crear en `Gitlab` local un repositorio público con el nombre `some-code` que contenga el fichero `script-test.sh` con el siguiente contenido:
 
        #!/bin/bash
 
@@ -23,7 +23,7 @@ Admin -> Settings -> Network -> Outbound Requests -> Allow requests to the local
 
 6. En la rama dejaremos `*/master` tal y como aparece.
 
-7. Crear las variables de entorno `PRIMERNUM` y `SEGUNDONUM`, como `string parameter`, e indicarle algún valor por defecto.
+7. Añadir parametros al Job: `PRIMERNUM` y `SEGUNDONUM`, como `string parameter`, e indicarle algún valor por defecto.
 
 8. Añadir un `Build step` de tipo `Execute shell` en el que se de permisos de ejecucion al script que tenemos en el repo y se ejecute:
 
@@ -44,7 +44,7 @@ Admin -> Settings -> Network -> Outbound Requests -> Allow requests to the local
 
 14. Crear un `Post-build Actions`, elegir `Publish build status to GitLab`.
 
-15. A continuación vamos al proyecto en GitLab y crearemos un webhook en la opción `Settings->Webhooks`. Indicamos la URL de nuestro proyecto de Jenkins por ejemplo http://192.168.1.50:8080/job/scm/job/scm-gitlab y copiamos el token que hemos generado en el paso anterior.
+15. A continuación vamos al proyecto en GitLab y crearemos un webhook en la opción `Settings->Webhooks`. Indicamos la URL de nuestro proyecto de Jenkins por ejemplo http://192.168.1.50:8080/project/scm/job/scm-gitlab y copiamos el token que hemos generado en el paso anterior.
 
 16. Hacer un Test de un Push y comprobar que se ejecuta el job.
 

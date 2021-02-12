@@ -9,7 +9,7 @@
 
 3. En la sección `Build`, añadir un step `Ejecución de una shell` que incluya el siguiente comando:
 
-       "uname -a"
+       uname -a
 
 4. Guardar el job y ejecutar el build.
 
@@ -17,7 +17,7 @@
 
 6. Modificar el job para que guarde la salida del comando en un fichero:
 
-       uname -a >>fichero.txt
+       uname -a >>fichero$BUILD_ID.txt
 
 7. Ejecutar otro build comprobar que en el Workspase aparece el fichero y que se puede ver el contenido y mostrar.
 
@@ -30,9 +30,11 @@ Name: Nombre
 Default Value: El nombre que se quiera
 Descripción: La descripción que se quiera
 
-11. Añadir un nuevo Step al Build en el que se ejecute el siguiente comando:
+11. Añadir un nuevo al Build un nuevo step de tipo `Execute shell` en el que se ejecute el siguiente comando:
 
         echo " Bienvenido a Jenkis" $Nombre
+
+12. Ejecutar un nuevo Build.
 
 #### Simple Build Trigger
 
@@ -58,6 +60,16 @@ Descripción: La descripción que se quiera
 
 1. Instalar el Plugin `Build Monitor View`.
 
-2. Una vez instalado, en la pestaña **+** al lado de **All**, bien en la opción **New Vie**, crear una nueva `View` que se llame por ejemplo `Build-status`. Seleccionar la opción `Build Monitor View` y guardar.
+2. Una vez instalado, en la pestaña **+** al lado de **All**, o  bien en la opción **New View**, crear una nueva `View` que se llame por ejemplo `Build-status`. Seleccionar la opción `Build Monitor View` y guardar. En la siguiente ventana, añadir la descripción que se quiera y seleccionar todos los jobs que se quieran monitorizar.
 
-3. Acceder al Monitor.
+3. Acceder al Monitor, pinchando en la vista que acabamos de crear.
+
+#### Configurar Status Monitor
+
+1. Instalar el plugin `Status Monitor`.
+
+2. Aparecerá una nueva opción en el menu `Dashboard` llamada `Status Monitor`.
+
+3. Añadir a la configuración de los Jobs que querais monitorizar una acción `Post Build` de tipo `Status Monitor`
+
+4. Acceder al monitor y comprobar como aparecen los jobs que se hayan añadido.
