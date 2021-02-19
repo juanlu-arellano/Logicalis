@@ -1,5 +1,6 @@
 ### Build Tools
 
+En este laboratorio vamos a practicar el uso de Build Tools.
 
 1. Ir a `Manage Jenkis -> Global Configuration` y ver que Tools ya aparecen disponibles. En este ejemplo vamos a usar **Ant**.
 
@@ -15,7 +16,7 @@
 
        clean compile test package war
 
-5. Ejecutar un build y comprobar que termina correctamente.
+5. Ejecutar un build y comprobar que termina correctamente. Ver tambien la salida de la consola.
 
 6. A continuación configuraremos que se muestren los resultados de los Test de `JUnit`. Para ello añadimos un `Post-build action` de tipo, `Publish JUnit results report`.
 

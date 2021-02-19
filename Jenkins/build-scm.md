@@ -1,5 +1,7 @@
 ### Jenkins SCM – Integración con Gitlab
 
+En este laboratorio vamos a probar las integraciones de Jenkins y GitLab
+
 * Para poder usar IPs internas en gitlab hay que configurar lo siguiente:
 
 Admin -> Settings -> Network -> Outbound Requests -> Allow requests to the local network from hooks and services
@@ -13,7 +15,7 @@ Admin -> Settings -> Network -> Outbound Requests -> Allow requests to the local
        NUM=$(($PRIMERNUM + $SEGUNDONUM))
        echo "El numero total es :" $NUM
 
-2. Crear un item de tipo `Folder` con nombre `scm`.
+2. En Jenkins crear un item de tipo `Folder` con nombre `scm`.
 
 3. Dentro de la carpeta `scm` crear un proyecto de tipo `freestyle` que se llame `scm-gitlab`.
 
@@ -23,14 +25,14 @@ Admin -> Settings -> Network -> Outbound Requests -> Allow requests to the local
 
 6. En la rama dejaremos `*/master` tal y como aparece.
 
-7. Añadir parametros al Job: `PRIMERNUM` y `SEGUNDONUM`, como `string parameter`, e indicarle algún valor por defecto.
+7. Añadir parametros al Job: `PRIMERNUM` y `SEGUNDONUM`, como `string parameter`, e indicarle algún valor numérico por defecto.
 
 8. Añadir un `Build step` de tipo `Execute shell` en el que se de permisos de ejecucion al script que tenemos en el repo y se ejecute:
 
        chmod +x ./script-test.sh
        ./script-test.sh
 
-9. Guardar y ejecutar el build. Comprobar que funciona correctamente.
+9. Guardar y ejecutar un build. Comprobar que el build se ejecuta correctamente y comprobar la salida de la consola.
 
 ### Configuración usando Webhook
 
@@ -40,25 +42,25 @@ Admin -> Settings -> Network -> Outbound Requests -> Allow requests to the local
 
 12. Seleccionamos tambien las opciones `Accepted Merge Request Events` y `Closed Merge Request Events`.
 
-13. Pinchamos en `Advanced` para generar un `Token` para nuestro webhook. Copiamos el token generado y salvamos el Job.
+13. Pinchamos en `Advanced` para generar un `Token` para nuestro webhook. Copiamos el token generado en un editor.
 
-14. Crear un `Post-build Actions`, elegir `Publish build status to GitLab`.
+14. Crear un `Post-build Actions`, elegir `Publish build status to GitLab` y guardar el Job.
 
-15. A continuación vamos al proyecto en GitLab y crearemos un webhook en la opción `Settings->Webhooks`. Indicamos la URL de nuestro proyecto de Jenkins por ejemplo http://192.168.1.50:8080/project/scm/job/scm-gitlab y copiamos el token que hemos generado en el paso anterior.
+15. A continuación vamos al proyecto `some-code` en GitLab y crearemos un webhook en la opción `Settings->Webhooks`. Indicamos la URL de nuestro proyecto de Jenkins por ejemplo http://192.168.1.50:8080/project/scm/job/scm-gitlab (importante cambiar en la URL del job donde pone job debe ser project), copiamos el token que hemos generado en el paso 13, deshabilitar el SSL y guardar el webhook.
 
-16. Hacer un Test de un Push y comprobar que se ejecuta el job.
+16. Hacer un Test de un `Push` y comprobar que se ejecuta el job.
 
 ### Configuración usando Jenkins Integration
 
-17. Crear un `personal access token` para autorizar a Jenkins el acceso a GitLab. En el `Settings` de la cuenta ir a `Access Tokens` en el menú de la derecha. Crear el token con el `API scope` seleccionado. Guardar el valor del token, se usará al configurar el plugin de GitLab en Jenkins.
+17. Crear un `personal access token` para autorizar a Jenkins el acceso a GitLab. Para ello en GitLab, en el `Settings` de la cuenta ir a `Access Tokens` en el menú de la derecha. Crear el token con el `API scope` seleccionado. Guardar el valor del token, se usará al configurar el plugin de GitLab en Jenkins.
 
 18. Configurar el plugin de `GitLab`. Ir a `Manage Jenkins -> Configure System` a la sección `GitLab` y marcar la opción `Enable authentication for ‘/project’ end-point`. Hacer click en `Add` para crear un nuevo `GitLab Connection`. Asignarle un nombre, copiar la url del GitLab, por ejemplo http://192.168.1.50:81 y crear una Credencial de tipo `GitLab API token` en la que pondremos el token que obtuvimos en el paso anterior, indicando una descripción.
 
-19. Seleccionar la credencial que acabamos de crear y testear la conexión. Asegurarse de que da ok antes de continuar.
+19. Seleccionar la credencial que acabamos de crear y testear la conexión. Asegurarse de que da ok antes de continuar. Guardar los cambios.
 
 20. Crear un nuevo job dentro de la carpeta `scm`, por ejemplo `scm-jenkins-ci` a partir del job `scm-gitlab`.
 
-21. Ir a GitLab al repositorio `Settings -> Integration -> Jenkins CI`. Seleccionar `Enable Integration -> Active`. Seleccionar los siguientes `Triggers`: Push, Merge request, Tag push.
+21. Ir a GitLab al repositorio opción `Settings -> Integration -> Jenkins CI`. Seleccionar `Enable Integration -> Active`. Seleccionar los siguientes `Triggers`: Push, Merge request, Tag push.
 
 22. Configurar la URL de Jenkins, por ejemplo: http://192.168.1.50:8080
 

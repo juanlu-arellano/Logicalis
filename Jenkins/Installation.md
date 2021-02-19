@@ -1,5 +1,7 @@
 ### Instalación de Jenkins en docker
 
+https://www.jenkins.io/doc/book/installing/
+
 #### Minimum hardware requirements:
 
 * 256 MB of RAM
@@ -25,7 +27,7 @@
 
 3. Crear imagen a partir del siguiente `Dockerfile`:
 
-       FROM jenkins/jenkins:2.263.3-lts-jdk11
+       FROM jenkins/jenkins:2.263.4-lts-jdk11
        USER root
        RUN apt-get update && apt-get install -y apt-transport-https \
               ca-certificates curl gnupg2 \

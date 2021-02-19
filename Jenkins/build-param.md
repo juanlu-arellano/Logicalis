@@ -1,5 +1,7 @@
 ### Build con Parametros, Simple Trigger y Build Monitor View
 
+En este laboratorio vamos a practicar como añadir parametros a un Job, como crear un Trigger para que un Job ejecute otro Job automáticamente y como configurar monitores para los Proyectos.
+
 #### Build con Parametros
 
 1. Crear un job de tipo `freestyle` llamado `build-params`.
