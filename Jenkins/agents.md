@@ -11,18 +11,23 @@
        $ sudo useradd -d /var/lib/jenkins jenkins
        $ sudo chown jenkins:jenkins /var/lib/jenkins
 
-2. Generar clave ssh y copiarla al fichero `/var/lib/jenkins/.ssh/auhorized_keys`:
+2. En el agente generar clave ssh y copiarla al fichero `/var/lib/jenkins/.ssh/authorized_keys`:
 
-       $ sudo su - jenkins -s /bin/bash
+       $ sudo su - jenkins
        $ ssh-keygen
 
        $ cd /var/lib/jenkins/.ssh
-       $ cat ./.ssh/id_rsa_pub
-       $ cp /var/lib/jenkins/.ssh/auhorized_keys
+       $ cat id_rsa.pub
+       $ cp id_rsa.pub /var/lib/jenkins/.ssh/authorized_keys
 
-3. Instalar java:
+ Hacer ssh desde master a agente:
 
-       $ sudo apt-install openjdk-8-jre-headless
+       $ docker exec -it jenkins-blueocean /bin/bash
+       $ ssh <ip agente>
+
+3. Instalar java en el agente:
+
+       $ sudo apt install openjdk-8-jre-headless
 
 4. Configurar el agente en la consola de Jenkins, opción `Manage Jenkins->Manage Nodes and Cloud`:
 
