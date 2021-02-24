@@ -4,7 +4,7 @@
 
 2. Una vez instalado el Plugin hay que configurar un `Gitlab Server`. Ir a `Manage Jenkins -> Configure System` a la sección `GitLab Server`. Configurar nuestro GitLab server, `nombre: gitlab.com`, URL: https://gitlab.com. Añadir una credencial de tipo `API Token` con un token que obtenemos de nuestra cuenta de gitalb.com. Testear la conexión y guardar.
 
-3. Ir a gitlab.com y hacer un fork del repositorio https://gitlab.com/lissettegar/some-code.
+3. Ir a gitlab.com y hacer un fork del repositorio https://gitlab.com/lissettegar/some-code. Desvincular vuestro repositorio del mio en `Settings->General->Advanced->Remove fork relationship`.
 
 4. Nuestro Jenkinsfile en el primer stage hace un Checkout del repositorio `some-code`. Desde la rama develop editar el Jenkinsfile para que apunte a vuestro repositorio en lugar de al mio.
 
